@@ -14,7 +14,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateOrderIdRequest {
+public class CreateOrderIdRequest implements OrderRequest{
     private final String memberId;
     private final CreateOrderIdRequestBody body;
     private final OrderClient client;
