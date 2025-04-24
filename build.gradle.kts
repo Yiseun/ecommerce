@@ -1,5 +1,7 @@
 plugins {
     id("java")
+    id("org.springframework.boot") version "3.2.0"
+    id("io.spring.dependency-management") version "1.1.2"
 }
 
 group = "com.ecommerce"
@@ -10,8 +12,16 @@ repositories {
 }
 
 dependencies {
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    runtimeOnly ("org.mariadb.jdbc:mariadb-java-client:3.0.6")
+    implementation("org.springframework.boot:spring-boot-starter-web:3.2.0")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    annotationProcessor("org.projectlombok:lombok")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter-kotlin:1.1.11")
+    testImplementation("org.mockito:mockito-core:5.14.2")
 }
 
 tasks.test {
