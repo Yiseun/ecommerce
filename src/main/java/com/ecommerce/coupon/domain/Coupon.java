@@ -1,6 +1,6 @@
 package com.ecommerce.coupon.domain;
 
-import com.ecommerce.coupon.exception.domain.BusinessLoginException;
+import com.ecommerce.coupon.exception.domain.BusinessLogicException;
 import com.ecommerce.coupon.exception.domain.FailedCreationException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -40,16 +40,16 @@ public class Coupon {
             final long longValue = Long.parseLong(originPrice);
             final long minimumPrice = 1L;
             if(longValue<minimumPrice){
-                throw new BusinessLoginException("쿠폰은 0원을 넘는 가격일때만 사용할수있습니다");
+                throw new BusinessLogicException("쿠폰은 0원을 넘는 가격일때만 사용할수있습니다");
             }
             final long maxPercentValue = 100L;
             final long overflowPredictValue = Long.MAX_VALUE/(maxPercentValue-MINIMUM_DISCOUNT_PERCENT);
             if(longValue>overflowPredictValue){
-                throw new BusinessLoginException("아직 이렇게 큰 수는 지원하지 않습니다.");
+                throw new BusinessLogicException("아직 이렇게 큰 수는 지원하지 않습니다.");
             }
             return longValue*(maxPercentValue-discountPercent)/maxPercentValue;
         }catch (NumberFormatException e){
-            throw new BusinessLoginException("올바른 가격을 입력해주세요.");
+            throw new BusinessLogicException("올바른 가격을 입력해주세요.");
         }
     }
 
