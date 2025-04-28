@@ -8,9 +8,8 @@ import lombok.Getter;
 @EqualsAndHashCode
 @Getter
 public class Quantity {
-    private static final Long MINIMUM_ORDER_QUANTITY = 0L;
+    private static final Long MINIMUM_ORDER_QUANTITY = 1L;
     private final Long value;
-
     private Quantity(final String value){
         this.value = validate(value);
     }
@@ -19,7 +18,7 @@ public class Quantity {
         try{
             final Long longValue = Long.valueOf(value);
             if(longValue<MINIMUM_ORDER_QUANTITY){
-                throw new FailedCreationException("수량은 음수일수 없습니다.");
+                throw new FailedCreationException("구매수량은 1개이상이어야합니다.");
             }
             return longValue;
         }catch (NumberFormatException e){

@@ -1,6 +1,6 @@
 package com.ecommerce.payment.portone;
 
-import com.ecommerce.payment.dto.CreatePaymentSessionRequest;
+import com.ecommerce.payment.dto.request.CreatePaymentSessionRequest;
 import com.ecommerce.payment.portone.exception.TypeCastException;
 import com.siot.IamportRestClient.request.PrepareData;
 import lombok.Getter;

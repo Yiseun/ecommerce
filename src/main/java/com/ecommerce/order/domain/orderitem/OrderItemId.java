@@ -1,9 +1,10 @@
 package com.ecommerce.order.domain.orderitem;
 
-import com.ecommerce.order.exception.OrderException;
 import com.ecommerce.order.exception.domain.FailedCreationException;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+@EqualsAndHashCode
 @Getter
 public class OrderItemId {
     private static final Long MINIMUM_ORDERITEM_VALUE = 0L;

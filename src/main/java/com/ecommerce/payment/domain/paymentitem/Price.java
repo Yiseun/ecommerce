@@ -1,8 +1,10 @@
 package com.ecommerce.payment.domain.paymentitem;
 
 import com.ecommerce.payment.exception.domain.FailedCreationException;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+@EqualsAndHashCode
 @Getter
 public class Price {
     private static final Long MINIMUM_PURCHASE_PRICE = 0L;

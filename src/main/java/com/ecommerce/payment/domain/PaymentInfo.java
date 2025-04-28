@@ -9,7 +9,6 @@ import lombok.Getter;
 @EqualsAndHashCode
 @Getter
 public class PaymentInfo {
-    private final String orderId;
     private final String buyerName;
     private final String buyerPhoneNumber;
     private final String buyerEmail;

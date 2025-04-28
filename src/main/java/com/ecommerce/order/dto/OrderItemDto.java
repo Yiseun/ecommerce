@@ -6,6 +6,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class OrderItemDto {
+    private final String orderItemId;
     private final String productId;
     private final String productName;
     private final String quantity;
