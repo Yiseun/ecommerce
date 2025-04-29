@@ -1,17 +1,14 @@
 package com.ecommerce.payment.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PurchaseItemEntity {
+public class PaymentItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long purchaseItemId;
+    private Long paymentItemId;
     @Column(unique = true)
     private String orderItemId;
     private String productId;
