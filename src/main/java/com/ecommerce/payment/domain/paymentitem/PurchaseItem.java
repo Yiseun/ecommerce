@@ -1,17 +1,15 @@
 package com.ecommerce.payment.domain.paymentitem;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
-@Builder
+@EqualsAndHashCode
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class PurchaseItem {
-    private final String productId;
-    private final String productName;
-    private final Quantity quantity;
-    private final Price price;
-    private final String discountPrice;
-    private final String couponDiscountPercent;
-    private final String couponId;
-    private final String userCouponId;
+    private final String orderItemId;
+    private final PaymentItemInfo paymentItemInfo;
+
+    public static PurchaseItem of(final String orderItemId,final PaymentItemInfo paymentItemInfo){
+        return new PurchaseItem(orderItemId, paymentItemInfo);
+    }
 }
