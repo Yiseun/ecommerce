@@ -1,5 +1,6 @@
 package com.ecommerce.coupon;
 
+import com.ecommerce.coupon.dto.InternalCouponUseRequest;
 import com.ecommerce.coupon.dto.InternalCouponValidateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -11,5 +12,9 @@ public class CouponReceiver {
 
     public void validate(final InternalCouponValidateRequest request){
         couponService.validate(request);
+    }
+
+    public void use(final InternalCouponUseRequest request){
+        couponService.useUserCoupon(request);
     }
 }
