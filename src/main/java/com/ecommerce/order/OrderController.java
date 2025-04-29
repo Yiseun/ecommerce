@@ -1,8 +1,10 @@
 package com.ecommerce.order;
 
-import com.ecommerce.order.dto.CreateOrderIdRequest;
-import com.ecommerce.order.dto.CreateOrderIdRequestBody;
-import com.ecommerce.order.dto.CreateOrderIdResponse;
+import com.ecommerce.order.dto.request.CompleteOrderRequest;
+import com.ecommerce.order.dto.request.CompleteOrderRequestBody;
+import com.ecommerce.order.dto.request.CreateOrderIdRequest;
+import com.ecommerce.order.dto.request.CreateOrderIdRequestBody;
+import com.ecommerce.order.dto.response.CreateOrderIdResponse;
 import com.ecommerce.order.port.OrderClientRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +24,11 @@ public class OrderController {
     public ResponseEntity<CreateOrderIdResponse> createId(final String memberId, @RequestBody final CreateOrderIdRequestBody body){
         final CreateOrderIdResponse response = orderService.createOrderId(CreateOrderIdRequest.of(memberId,body,registry.createOrderCreateClient()));
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/complete")
+    public ResponseEntity<Void> completeOrder(final String memberId, @RequestBody CompleteOrderRequestBody body){
+        orderService.completeOrder(CompleteOrderRequest.of(memberId,body,registry.createOrderCompleteClient()));
+        return ResponseEntity.ok().build();
     }
 }

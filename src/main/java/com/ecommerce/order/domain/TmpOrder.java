@@ -1,15 +1,54 @@
 package com.ecommerce.order.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.ecommerce.order.domain.orderitem.*;
+import com.ecommerce.payment.exception.domain.FailedCreationException;
+import lombok.*;
 
+import java.util.List;
+
+@Builder
+@EqualsAndHashCode
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class TmpOrder {
-    private final Order order;
+    private final OrderId orderId;
+    private final String memberId;
+    private final String totalPrice;
+    private final String buyerName;
+    private final String buyerPhoneNumber;
+    private final String buyerEmail;
+    private final String buyerAddress;
+    private final String buyerPostcode;
+    private final List<TmpOrderItem> tmpOrderItems;
 
-    public static TmpOrder from(final Order order){
-        return new TmpOrder(order);
+    public Order createOrderWith(final TmpOrder tmpOrder){
+        if(!this.equals(tmpOrder)){
+            throw new FailedCreationException("정보가 다릅니다.");
+        }
+        final OrderBase orderBase = OrderBase.of(this.orderId,this.memberId);
+        final OrderDetail orderDetail = OrderDetail.builder()
+                .buyerName(this.buyerName)
+                .buyerPhoneNumber(this.buyerPhoneNumber)
+                .buyerEmail(this.buyerEmail)
+                .buyerAddress(this.buyerAddress)
+                .buyerPostcode(this.buyerPostcode)
+                .build();
+        final Price price = Price.from(this.totalPrice);
+        final List<OrderItem> orderItems = tmpOrderItems.stream().map(tmpOrderItem -> {
+            final OrderItemInfo orderItemInfo = OrderItemInfo.builder()
+                    .orderItemId(OrderItemId.from(tmpOrderItem.getOrderItemId().getValue().toString()))
+                    .productId(tmpOrderItem.getProductId())
+                    .productName(tmpOrderItem.getProductName())
+                    .quantity(Quantity.from(tmpOrderItem.getQuantity()))
+                    .price(Price.from(tmpOrderItem.getPrice()))
+                    .discountPrice(Price.from(tmpOrderItem.getDiscountPrice()))
+                    .couponDiscountPercent(tmpOrderItem.getCouponDiscountPercent())
+                    .couponId(tmpOrderItem.getCouponId())
+                    .userCouponId(tmpOrderItem.getUserCouponId())
+                    .build();
+            final OrderItemState orderItemState = OrderItemState.init();
+            final TrackingInfo trackingInfo = TrackingInfo.init();
+            return OrderItem.of(orderItemInfo,orderItemState,trackingInfo);
+        }).toList();
+        return Order.of(orderBase,orderDetail,price,orderItems);
     }
 }

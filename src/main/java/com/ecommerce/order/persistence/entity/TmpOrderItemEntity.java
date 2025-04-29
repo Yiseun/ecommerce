@@ -1,4 +1,4 @@
-package com.ecommerce.order.pesistence.entity;
+package com.ecommerce.order.persistence.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +23,4 @@ public class TmpOrderItemEntity {
     private String couponDiscountPercent;
     private String couponId;
     private String userCouponId;
-    private String orderItemState;
-    private String trackingInfo;
 }

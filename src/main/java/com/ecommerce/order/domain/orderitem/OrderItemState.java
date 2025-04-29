@@ -1,8 +1,10 @@
 package com.ecommerce.order.domain.orderitem;
 
 public enum OrderItemState {
-    주문완료;
+    WAITING_FOR_PAYMENT,
+    ORDER_COMPLETE,
+    ORDER_FINALIZED;
     public static OrderItemState init(){
-        return OrderItemState.주문완료;
+        return OrderItemState.WAITING_FOR_PAYMENT;
     }
 }
