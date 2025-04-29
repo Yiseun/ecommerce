@@ -1,5 +1,6 @@
-package com.ecommerce.payment.dto;
+package com.ecommerce.payment.dto.request;
 
+import com.ecommerce.payment.dto.PurchaseItemDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

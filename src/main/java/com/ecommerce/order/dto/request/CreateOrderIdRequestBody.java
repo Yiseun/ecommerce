@@ -1,10 +1,11 @@
-package com.ecommerce.order.dto;
+package com.ecommerce.order.dto.request;
 
+import com.ecommerce.order.dto.OrderItemDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 
-@Getter
+@Getter //패키지변경
 @RequiredArgsConstructor
 public class CreateOrderIdRequestBody {
     private final List<OrderItemDto> orderItemDtos;
