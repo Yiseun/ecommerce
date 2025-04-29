@@ -3,7 +3,7 @@ package com.ecommerce.order.port;
 import com.ecommerce.coupon.CouponReceiver;
 import com.ecommerce.coupon.dto.CouponRequest;
 import com.ecommerce.coupon.dto.InternalCouponValidateRequest;
-import com.ecommerce.order.dto.CreateOrderIdRequest;
+import com.ecommerce.order.dto.request.CreateOrderIdRequest;
 import com.ecommerce.order.dto.OrderRequest;
 import com.ecommerce.product.ProductReceiver;
 import com.ecommerce.product.dto.InternalProductValidateRequest;
