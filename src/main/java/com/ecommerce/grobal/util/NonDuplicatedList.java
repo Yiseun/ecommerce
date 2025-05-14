@@ -1,6 +1,6 @@
 package com.ecommerce.grobal.util;
 
-import com.ecommerce.grobal.EcommerceException;
+import com.ecommerce.grobal.exception.EcommerceException;
 
 import java.util.HashSet;
 import java.util.List;
