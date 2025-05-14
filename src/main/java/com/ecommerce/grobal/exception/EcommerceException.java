@@ -1,4 +1,4 @@
-package com.ecommerce.grobal;
+package com.ecommerce.grobal.exception;
 
 public class EcommerceException extends RuntimeException{
 
