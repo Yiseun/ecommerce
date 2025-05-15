@@ -1,7 +1,7 @@
 package com.ecommerce.auth.domain;
 
 import com.ecommerce.auth.domain.prevalidation.Prevalidation;
-import com.ecommerce.auth.exception.application.domain.BusinessLogicException;
+import com.ecommerce.auth.exception.application.domain.business.BusinessLogicException;
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
 import lombok.Getter;
 
@@ -27,11 +27,25 @@ public class PrevalidationSessionData {
         return constraint;
     }
     public PrevalidationSessionData substitute(final PrevalidationSessionData request){
-        if(request==null||request.prevalidation.isEmpty()){
-            throw new BusinessLogicException("갱신할 정보가 비어있습니다.");
+        if(request==null){
+            throw new InvalidConstructionException("갱신할 정보가 비어있습니다.");
+        }
+        if(request.prevalidation.isEmpty()){
+            throw new BusinessLogicException("요청정보가 존재하지 않습니다.");
         }
         final Constraint resultConstraint = this.constraint.update(request.getConstraint());
-        return new PrevalidationSessionData(request.getPrevalidation(),resultConstraint);
+        return new PrevalidationSessionData(request.prevalidation,resultConstraint);
+    }
+
+    public PrevalidationSessionData update(final PrevalidationSessionData request){
+        if(request==null){
+            throw new InvalidConstructionException("입력이 존재하지 않습니다.");
+        }
+        if(this.constraint.isEmpty()){
+            throw new InvalidConstructionException("제약조건이 초기화되지 않았습니다.");
+        }
+        final Prevalidation resultPrevalidation = this.prevalidation.update(request.prevalidation);
+        return new PrevalidationSessionData(resultPrevalidation,this.constraint);
     }
 
     public static PrevalidationSessionData of(final Prevalidation prevalidation,final Constraint constraint){
