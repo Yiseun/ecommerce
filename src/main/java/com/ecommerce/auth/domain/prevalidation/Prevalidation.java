@@ -29,6 +29,16 @@ public class Prevalidation {
         return this.email.isEmpty() || this.validateInfo.isEmpty();
     }
 
+    public Prevalidation update(final Prevalidation request){
+        if(request==null){
+            throw new InvalidConstructionException("입력이 존재하지 않습니다.");
+        }
+        if(this.email.isEmpty()){
+            throw new InvalidConstructionException("이메일이 초기화되지 않았습니다.");
+        }
+        final ValidateInfo resultValidateInfo = this.validateInfo.update(request.validateInfo);
+        return new Prevalidation(this.email,resultValidateInfo);
+    }
     public static Prevalidation of(final Email email,final ValidateInfo validateInfo){
         return new Prevalidation(email,validateInfo);
     }
