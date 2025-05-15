@@ -17,7 +17,7 @@ public class SendVerifyMailRequest {
     public PrevalidationSessionData toPrevalidationSessionData(final AccessCodeCreator accessCodeCreator){
         final AccessCode accessCode = accessCodeCreator.createAccessCode();
         final Email email = Email.from(body.getEmail());
-        final ValidateInfo validateInfo = ValidateInfo.of(accessCode,null,"PREPARE");
+        final ValidateInfo validateInfo = ValidateInfo.init(accessCode);
         final Prevalidation prevalidation = Prevalidation.of(email,validateInfo);
         final Constraint constraint = Constraint.from(null);
         return PrevalidationSessionData.of(prevalidation,constraint);

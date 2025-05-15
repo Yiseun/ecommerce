@@ -3,6 +3,7 @@ package com.ecommerce.auth;
 import com.ecommerce.auth.domain.PrevalidationSessionData;
 import com.ecommerce.auth.dto.PrevalidationSessionDto;
 import com.ecommerce.auth.dto.SendVerifyMailRequest;
+import com.ecommerce.auth.dto.VerifyAccessCodeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,5 +19,11 @@ public class AuthService {
         final PrevalidationSessionData resultPrevalidationSessionData = serverPrevalidationData.substitute(requestPrevalidationData);
         request.getClient().sendMessage(resultPrevalidationSessionData.getPrevalidation());
         return PrevalidationSessionDto.from(resultPrevalidationSessionData);
+    }
+
+    public PrevalidationSessionDto updatePrevalidation(final PrevalidationSessionDto serverData, final VerifyAccessCodeRequest request){
+        final PrevalidationSessionData requestPrevalidationSessionData = request.toPrevalidationSessionData();
+        final PrevalidationSessionData serverPrevalidationSessionData = serverData.toPrevalidationSessionData();
+        return PrevalidationSessionDto.from(serverPrevalidationSessionData.update(requestPrevalidationSessionData));
     }
 }

@@ -1,6 +1,6 @@
 package com.ecommerce.coupon.exception;
 
-import com.ecommerce.grobal.EcommerceException;
+import com.ecommerce.grobal.exception.EcommerceException;
 
 public class CouponException extends EcommerceException {
     public CouponException(final String message) {

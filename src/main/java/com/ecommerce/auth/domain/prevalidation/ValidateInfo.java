@@ -1,6 +1,7 @@
 package com.ecommerce.auth.domain.prevalidation;
 
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
+import com.ecommerce.auth.exception.application.domain.business.OutOfTryCountException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -29,7 +30,32 @@ public class ValidateInfo {
         return this.accessCode.isEmpty();
     }
     public String getValidateState(){
+        if(this.validateState==null){
+            return null;
+        }
         return this.validateState.name();
+    }
+    public ValidateInfo update(final ValidateInfo validateInfo){
+        if(validateInfo==null){
+            throw new InvalidConstructionException("요청은 null일수 없습니다.");
+        }
+        if(this.accessCode.isEmpty()||this.tryCount==null||this.validateState==null){
+            throw new InvalidConstructionException("검증정보가 초기화되지 않았습니다.");
+        }
+        if(this.validateState.equals(ValidateState.SUCCESS)){
+            return new ValidateInfo(this.accessCode,this.tryCount,this.validateState);
+        }
+        if(this.tryCount<=MINIMUM_TRY_COUNT){
+            throw new OutOfTryCountException("더이상 시도할수 없습니다.");
+        }
+        final Integer resultTryCount = this.tryCount-TRY_COUNT_REDUCED_PER_TRY;
+        if(this.accessCode.equals(validateInfo.accessCode)){
+            return new ValidateInfo(this.accessCode,resultTryCount,ValidateState.SUCCESS);
+        }
+        return new ValidateInfo(this.accessCode,resultTryCount,ValidateState.FAIL);
+    }
+    public static ValidateInfo init(final AccessCode accessCode){
+        return new ValidateInfo(accessCode,DEFAULT_TRY_COUNT,ValidateState.PREPARE);
     }
 
     public static ValidateInfo of(final AccessCode accessCode,final Integer tryCount,final String validateState){

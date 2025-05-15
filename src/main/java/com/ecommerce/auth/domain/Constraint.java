@@ -1,6 +1,6 @@
 package com.ecommerce.auth.domain;
 
-import com.ecommerce.auth.exception.application.domain.BusinessLogicException;
+import com.ecommerce.auth.exception.application.domain.business.BusinessLogicException;
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,6 +29,11 @@ public class Constraint {
         }
         return new Constraint(resultTryCount);
     }
+
+    public boolean isEmpty(){
+        return this.tryCount == null;
+    }
+
     private static Constraint createDafaultConstraint(){
         return new Constraint(DEFAULT_TRY_COUNT);
     }
