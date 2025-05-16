@@ -1,6 +1,6 @@
 package com.ecommerce.auth.port;
 
-import com.ecommerce.auth.domain.prevalidation.Prevalidation;
+import com.ecommerce.auth.domain.sessiondata.prevalidation.Prevalidation;
 import com.ecommerce.auth.exception.application.MailSendFailureException;
 import com.ecommerce.auth.mail.MailMessageFactory;
 import com.ecommerce.auth.mail.ValidationMailMessage;
