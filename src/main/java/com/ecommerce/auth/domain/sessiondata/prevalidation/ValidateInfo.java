@@ -35,6 +35,13 @@ public class ValidateInfo {
         }
         return this.validateState.name();
     }
+
+    public boolean isComplete(){
+        if(this.validateState==null){
+            return false;
+        }
+        return this.validateState.equals(ValidateState.SUCCESS);
+    }
     public ValidateInfo update(final ValidateInfo validateInfo){
         if(validateInfo==null){
             throw new InvalidConstructionException("요청은 null일수 없습니다.");

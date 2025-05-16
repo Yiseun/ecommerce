@@ -26,6 +26,11 @@ public class PrevalidationSessionData {
         }
         return constraint;
     }
+
+    public boolean isComplete(){
+        return this.prevalidation.isComplete();
+    }
+
     public PrevalidationSessionData substitute(final PrevalidationSessionData request){
         if(request==null){
             throw new InvalidConstructionException("갱신할 정보가 비어있습니다.");

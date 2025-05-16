@@ -29,6 +29,10 @@ public class Prevalidation {
         return this.email.isEmpty() || this.validateInfo.isEmpty();
     }
 
+    public boolean isComplete(){
+        return this.validateInfo.isComplete();
+    }
+
     public Prevalidation update(final Prevalidation request){
         if(request==null){
             throw new InvalidConstructionException("입력이 존재하지 않습니다.");
