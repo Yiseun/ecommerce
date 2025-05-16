@@ -1,6 +1,6 @@
-package com.ecommerce.auth.domain;
+package com.ecommerce.auth.domain.sessiondata;
 
-import com.ecommerce.auth.domain.prevalidation.Prevalidation;
+import com.ecommerce.auth.domain.sessiondata.prevalidation.Prevalidation;
 import com.ecommerce.auth.exception.application.domain.business.BusinessLogicException;
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
 import lombok.Getter;
