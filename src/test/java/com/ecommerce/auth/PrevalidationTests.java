@@ -1,10 +1,10 @@
 package com.ecommerce.auth;
 
 import static org.assertj.core.api.Assertions.*;
-import com.ecommerce.auth.domain.prevalidation.AccessCode;
-import com.ecommerce.auth.domain.prevalidation.Email;
-import com.ecommerce.auth.domain.prevalidation.Prevalidation;
-import com.ecommerce.auth.domain.prevalidation.ValidateInfo;
+import com.ecommerce.auth.domain.sessiondata.prevalidation.AccessCode;
+import com.ecommerce.auth.domain.Email;
+import com.ecommerce.auth.domain.sessiondata.prevalidation.Prevalidation;
+import com.ecommerce.auth.domain.sessiondata.prevalidation.ValidateInfo;
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
 import org.junit.jupiter.api.Test;
 
