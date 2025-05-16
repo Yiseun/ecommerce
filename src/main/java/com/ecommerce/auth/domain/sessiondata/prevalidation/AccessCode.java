@@ -1,4 +1,4 @@
-package com.ecommerce.auth.domain.prevalidation;
+package com.ecommerce.auth.domain.sessiondata.prevalidation;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

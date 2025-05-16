@@ -1,6 +1,6 @@
-package com.ecommerce.auth.domain;
+package com.ecommerce.auth.domain.sessiondata;
 
-import com.ecommerce.auth.domain.prevalidation.Prevalidation;
+import com.ecommerce.auth.domain.sessiondata.prevalidation.Prevalidation;
 import com.ecommerce.auth.exception.application.domain.business.BusinessLogicException;
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
 import lombok.Getter;
@@ -26,6 +26,11 @@ public class PrevalidationSessionData {
         }
         return constraint;
     }
+
+    public boolean isComplete(){
+        return this.prevalidation.isComplete();
+    }
+
     public PrevalidationSessionData substitute(final PrevalidationSessionData request){
         if(request==null){
             throw new InvalidConstructionException("갱신할 정보가 비어있습니다.");

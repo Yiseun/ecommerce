@@ -1,6 +1,6 @@
 package com.ecommerce.auth;
 
-import com.ecommerce.auth.domain.prevalidation.AccessCode;
+import com.ecommerce.auth.domain.sessiondata.prevalidation.AccessCode;
 import com.ecommerce.auth.exception.application.AccessCodeCreationFailureException;
 import org.springframework.stereotype.Component;
 

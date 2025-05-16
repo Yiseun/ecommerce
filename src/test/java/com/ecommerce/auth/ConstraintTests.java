@@ -1,7 +1,7 @@
 package com.ecommerce.auth;
 
 import static org.assertj.core.api.Assertions.*;
-import com.ecommerce.auth.domain.Constraint;
+import com.ecommerce.auth.domain.sessiondata.Constraint;
 import com.ecommerce.auth.exception.application.domain.business.BusinessLogicException;
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
 import org.junit.jupiter.api.Test;

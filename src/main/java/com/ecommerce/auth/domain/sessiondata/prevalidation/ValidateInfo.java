@@ -1,4 +1,4 @@
-package com.ecommerce.auth.domain.prevalidation;
+package com.ecommerce.auth.domain.sessiondata.prevalidation;
 
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
 import com.ecommerce.auth.exception.application.domain.business.OutOfTryCountException;
@@ -34,6 +34,13 @@ public class ValidateInfo {
             return null;
         }
         return this.validateState.name();
+    }
+
+    public boolean isComplete(){
+        if(this.validateState==null){
+            return false;
+        }
+        return this.validateState.equals(ValidateState.SUCCESS);
     }
     public ValidateInfo update(final ValidateInfo validateInfo){
         if(validateInfo==null){

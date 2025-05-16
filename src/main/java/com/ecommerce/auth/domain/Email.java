@@ -1,4 +1,4 @@
-package com.ecommerce.auth.domain.prevalidation;
+package com.ecommerce.auth.domain;
 
 import lombok.Getter;
 

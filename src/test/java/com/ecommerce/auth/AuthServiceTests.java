@@ -3,17 +3,19 @@ package com.ecommerce.auth;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import com.ecommerce.auth.domain.prevalidation.AccessCode;
-import com.ecommerce.auth.dto.PrevalidationSessionDto;
-import com.ecommerce.auth.dto.SendVerifyMailRequest;
-import com.ecommerce.auth.dto.SendVerifyMailRequestBody;
-import com.ecommerce.auth.dto.VerifyAccessCodeRequest;
+import com.ecommerce.auth.domain.*;
+import com.ecommerce.auth.domain.sessiondata.prevalidation.AccessCode;
+import com.ecommerce.auth.dto.*;
+import com.ecommerce.auth.encrypt.Encryptor;
+import com.ecommerce.auth.persistence.AuthEntity;
+import com.ecommerce.auth.persistence.AuthEntityRepository;
 import com.ecommerce.auth.port.CreatePrevalidationClient;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 public class AuthServiceTests {
@@ -21,6 +23,10 @@ public class AuthServiceTests {
     private CreatePrevalidationClient createPrevalidationClient;
     @MockBean
     private AccessCodeCreator accessCodeCreator;
+    @MockBean
+    private Encryptor encryptor;
+    @Autowired
+    private AuthEntityRepository authEntityRepository;
     @Autowired
     private AuthService sut;
 
@@ -71,4 +77,31 @@ public class AuthServiceTests {
         assertThat(result.getValidateTryCount()).isEqualTo(expect.getValidateTryCount());
         assertThat(result.getValidateState()).isEqualTo(expect.getValidateState());
     }
+
+    @Test
+    @Transactional
+    void 인증정보가_완료상태라면_유저를_생성할수있다(){
+        final String email = "dfgdfg@ergreg.rg";
+        final String memberId = "dgdereds";
+        final String password = "DSFDsdsf#$#@$324";
+        final PrevalidationSessionDto prevalidationSessionDto = new PrevalidationSessionDto(3,email,"DSFD33",4,"SUCCESS");
+        final SignUpRequest signUpRequest = new SignUpRequest(memberId,password);
+        final SignUpResponse expect = new SignUpResponse(memberId);
+        when(encryptor.encrypt(RawPassword.from(password))).thenReturn(EncryptedPassword.from("$2a$10$CacO40Z5mg6C7QigZFqXn.1hz4Zw4OXphrdNmxhfK2SmFmkt7jXD2"));
+        final MemberId expectMemberId = MemberId.from(memberId);
+        final Email expectEmail = Email.from(email);
+        final EncryptedPassword expectEncryptedPassword = EncryptedPassword.from("$2a$10$CacO40Z5mg6C7QigZFqXn.1hz4Zw4OXphrdNmxhfK2SmFmkt7jXD2");
+        final Auth expectAuth = Auth.of(expectMemberId,expectEmail,expectEncryptedPassword);
+        final AuthEntity expectAuthEntity = AuthEntity.from(expectAuth);
+
+        final SignUpResponse resultReturn = sut.createAuth(prevalidationSessionDto,signUpRequest);
+
+        assertThat(resultReturn.getMemberId()).isEqualTo(expect.getMemberId());
+        final AuthEntity resultAuthEntity = authEntityRepository.findByMemberId(memberId).orElseThrow(()->new RuntimeException("테스트 실패"));
+        assertThat(resultAuthEntity.getMemberId()).isEqualTo(expectAuthEntity.getMemberId());
+        assertThat(resultAuthEntity.getEmail()).isEqualTo(expectAuthEntity.getEmail());
+        assertThat(resultAuthEntity.getPassword()).isEqualTo(expectAuthEntity.getPassword());
+    }
+
+
 }
