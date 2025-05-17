@@ -1,4 +1,4 @@
-package com.ecommerce.auth.domain;
+package com.ecommerce.auth.domain.sessiondata.validation;
 
 import lombok.Getter;
 

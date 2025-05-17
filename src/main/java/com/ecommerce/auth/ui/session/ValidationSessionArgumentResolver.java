@@ -9,15 +9,15 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class PrevalidationSessionArgumentResolver implements HandlerMethodArgumentResolver {
+public class ValidationSessionArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(PrevalidationSession.class);
+        return parameter.getParameterType().equals(ValidationSession.class);
     }
 
     @Override
-    public PrevalidationSession resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public ValidationSession resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         final HttpServletRequest request = (HttpServletRequest) webRequest;
-        return PrevalidationSession.from(request.getSession());
+        return ValidationSession.from(request.getSession());
     }
 }

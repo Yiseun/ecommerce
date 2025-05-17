@@ -1,7 +1,7 @@
 package com.ecommerce.auth;
 
 import com.ecommerce.auth.domain.Auth;
-import com.ecommerce.auth.domain.sessiondata.PrevalidationSessionData;
+import com.ecommerce.auth.domain.sessiondata.ValidationSessionData;
 import com.ecommerce.auth.dto.*;
 import com.ecommerce.auth.encrypt.Encryptor;
 import com.ecommerce.auth.exception.application.DuplicatedRegistrationException;
@@ -20,27 +20,27 @@ public class AuthService {
     private final AccessCodeCreator accessCodeCreator;
     private final Encryptor encryptor;
     @Transactional
-    public PrevalidationSessionDto createPrevalidation(final PrevalidationSessionDto serverData, final SendVerifyMailRequest request){
-        final PrevalidationSessionData requestPrevalidationData = request.toPrevalidationSessionData(accessCodeCreator);
-        final PrevalidationSessionData serverPrevalidationData = serverData.toPrevalidationSessionData();
-        final PrevalidationSessionData resultPrevalidationSessionData = serverPrevalidationData.substitute(requestPrevalidationData);
-        request.getClient().sendMessage(resultPrevalidationSessionData.getPrevalidation());
-        return PrevalidationSessionDto.from(resultPrevalidationSessionData);
+    public ValidationSessionDto createValidation(final ValidationSessionDto serverData, final SendVerifyMailRequest request){
+        final ValidationSessionData requestValidationData = request.toValidationSessionData(accessCodeCreator);
+        final ValidationSessionData serverValidationData = serverData.toValidationSessionData();
+        final ValidationSessionData resultValidationSessionData = serverValidationData.substitute(requestValidationData);
+        request.getClient().sendMessage(resultValidationSessionData.getValidation());
+        return ValidationSessionDto.from(resultValidationSessionData);
     }
 
-    public PrevalidationSessionDto updatePrevalidation(final PrevalidationSessionDto serverData, final VerifyAccessCodeRequest request){
-        final PrevalidationSessionData requestPrevalidationSessionData = request.toPrevalidationSessionData();
-        final PrevalidationSessionData serverPrevalidationSessionData = serverData.toPrevalidationSessionData();
-        return PrevalidationSessionDto.from(serverPrevalidationSessionData.update(requestPrevalidationSessionData));
+    public ValidationSessionDto updateValidation(final ValidationSessionDto serverData, final VerifyAccessCodeRequest request){
+        final ValidationSessionData requestValidationSessionData = request.toValidationSessionData();
+        final ValidationSessionData serverValidationSessionData = serverData.toValidationSessionData();
+        return ValidationSessionDto.from(serverValidationSessionData.update(requestValidationSessionData));
     }
 
     @Transactional
-    public SignUpResponse createAuth(final PrevalidationSessionDto serverData, final SignUpRequest request){
-        final PrevalidationSessionData serverPrevalidationSessionData = serverData.toPrevalidationSessionData();
-        if(!serverPrevalidationSessionData.isComplete()){
+    public SignUpResponse createAuth(final ValidationSessionDto serverData, final SignUpRequest request){
+        final ValidationSessionData serverValidationSessionData = serverData.toValidationSessionData();
+        if(!serverValidationSessionData.isComplete()){
             throw new PrevalidationNotCompleteException("사전검증이 완료되지 않았습니다.");
         }
-        final Auth requestAuth = request.toAuth(serverData,encryptor);
+        final Auth requestAuth = request.toAuth(encryptor);
         final AuthEntity requestAuthEntity = AuthEntity.from(requestAuth);
         try {
             final AuthEntity resultAuthEntity = authEntityRepository.save(requestAuthEntity);

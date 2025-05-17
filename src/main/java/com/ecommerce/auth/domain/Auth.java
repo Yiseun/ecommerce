@@ -11,10 +11,8 @@ public class Auth {
     private MemberId memberId;
     @EqualsAndHashCode.Include
     private EncryptedPassword encryptedPassword;
-    private Email email;
-    private Auth(final MemberId memberId,final Email email,final EncryptedPassword encryptedPassword){
+    private Auth(final MemberId memberId,final EncryptedPassword encryptedPassword){
         this.memberId = validate(memberId);
-        this.email = email;
         this.encryptedPassword = validate(encryptedPassword);
     }
     private MemberId validate(final MemberId memberId){
@@ -31,7 +29,7 @@ public class Auth {
         return password;
     }
 
-    public static Auth of(final MemberId memberId,final Email email,final EncryptedPassword password){
-        return new Auth(memberId,email,password);
+    public static Auth of(final MemberId memberId,final EncryptedPassword password){
+        return new Auth(memberId,password);
     }
 }

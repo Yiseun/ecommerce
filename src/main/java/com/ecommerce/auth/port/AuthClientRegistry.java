@@ -11,7 +11,7 @@ public class AuthClientRegistry {
     private final JavaMailSender javaMailSender;
     private final MailMessageFactory messageFactory;
 
-    public CreatePrevalidationClient getCreatePrevalidationClient(){
-        return CreatePrevalidationClient.init(javaMailSender,messageFactory);
+    public CreateValidationClient getCreatePrevalidationClient(){
+        return CreateValidationClient.init(javaMailSender,messageFactory);
     }
 }
