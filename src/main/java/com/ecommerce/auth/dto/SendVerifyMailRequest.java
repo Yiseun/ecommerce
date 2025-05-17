@@ -4,7 +4,7 @@ import com.ecommerce.auth.AccessCodeCreator;
 import com.ecommerce.auth.domain.sessiondata.Constraint;
 import com.ecommerce.auth.domain.sessiondata.ValidationSessionData;
 import com.ecommerce.auth.domain.sessiondata.validation.AccessCode;
-import com.ecommerce.auth.domain.Email;
+import com.ecommerce.auth.domain.sessiondata.validation.Email;
 import com.ecommerce.auth.domain.sessiondata.validation.Validation;
 import com.ecommerce.auth.domain.sessiondata.validation.ValidateInfo;
 import com.ecommerce.auth.port.CreateValidationClient;

@@ -89,9 +89,8 @@ public class AuthServiceTests {
         final SignUpResponse expect = new SignUpResponse(memberId);
         when(encryptor.encrypt(RawPassword.from(password))).thenReturn(EncryptedPassword.from("$2a$10$CacO40Z5mg6C7QigZFqXn.1hz4Zw4OXphrdNmxhfK2SmFmkt7jXD2"));
         final MemberId expectMemberId = MemberId.from(memberId);
-        final Email expectEmail = Email.from(email);
         final EncryptedPassword expectEncryptedPassword = EncryptedPassword.from("$2a$10$CacO40Z5mg6C7QigZFqXn.1hz4Zw4OXphrdNmxhfK2SmFmkt7jXD2");
-        final Auth expectAuth = Auth.of(expectMemberId,expectEmail,expectEncryptedPassword);
+        final Auth expectAuth = Auth.of(expectMemberId,expectEncryptedPassword);
         final AuthEntity expectAuthEntity = AuthEntity.from(expectAuth);
 
         final SignUpResponse resultReturn = sut.createAuth(validationSessionDto,signUpRequest);
@@ -99,7 +98,6 @@ public class AuthServiceTests {
         assertThat(resultReturn.getMemberId()).isEqualTo(expect.getMemberId());
         final AuthEntity resultAuthEntity = authEntityRepository.findByMemberId(memberId).orElseThrow(()->new RuntimeException("테스트 실패"));
         assertThat(resultAuthEntity.getMemberId()).isEqualTo(expectAuthEntity.getMemberId());
-        assertThat(resultAuthEntity.getEmail()).isEqualTo(expectAuthEntity.getEmail());
         assertThat(resultAuthEntity.getPassword()).isEqualTo(expectAuthEntity.getPassword());
     }
 

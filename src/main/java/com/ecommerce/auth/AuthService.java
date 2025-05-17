@@ -40,7 +40,7 @@ public class AuthService {
         if(!serverValidationSessionData.isComplete()){
             throw new PrevalidationNotCompleteException("사전검증이 완료되지 않았습니다.");
         }
-        final Auth requestAuth = request.toAuth(serverData,encryptor);
+        final Auth requestAuth = request.toAuth(encryptor);
         final AuthEntity requestAuthEntity = AuthEntity.from(requestAuth);
         try {
             final AuthEntity resultAuthEntity = authEntityRepository.save(requestAuthEntity);
