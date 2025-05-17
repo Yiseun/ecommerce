@@ -1,6 +1,5 @@
 package com.ecommerce.auth.domain.sessiondata.validation;
 
-import com.ecommerce.auth.domain.Email;
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
