@@ -9,7 +9,7 @@ public class SignUpRequest {
     private final String memberId;
     private final String password;
 
-    public Auth toAuth(final PrevalidationSessionDto serverData, final Encryptor encryptor){
+    public Auth toAuth(final ValidationSessionDto serverData, final Encryptor encryptor){
         final EncryptedPassword password = encryptor.encrypt(RawPassword.from(this.password));
         final Email email = Email.from(serverData.getEmail());
         final MemberId memberId = MemberId.from(this.memberId);

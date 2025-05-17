@@ -1,4 +1,4 @@
-package com.ecommerce.auth.domain.sessiondata.prevalidation;
+package com.ecommerce.auth.domain.sessiondata.validation;
 
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
 import com.ecommerce.auth.exception.application.domain.business.OutOfTryCountException;

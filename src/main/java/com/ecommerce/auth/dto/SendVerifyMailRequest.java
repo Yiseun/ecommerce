@@ -2,12 +2,12 @@ package com.ecommerce.auth.dto;
 
 import com.ecommerce.auth.AccessCodeCreator;
 import com.ecommerce.auth.domain.sessiondata.Constraint;
-import com.ecommerce.auth.domain.sessiondata.PrevalidationSessionData;
-import com.ecommerce.auth.domain.sessiondata.prevalidation.AccessCode;
+import com.ecommerce.auth.domain.sessiondata.ValidationSessionData;
+import com.ecommerce.auth.domain.sessiondata.validation.AccessCode;
 import com.ecommerce.auth.domain.Email;
-import com.ecommerce.auth.domain.sessiondata.prevalidation.Prevalidation;
-import com.ecommerce.auth.domain.sessiondata.prevalidation.ValidateInfo;
-import com.ecommerce.auth.port.CreatePrevalidationClient;
+import com.ecommerce.auth.domain.sessiondata.validation.Validation;
+import com.ecommerce.auth.domain.sessiondata.validation.ValidateInfo;
+import com.ecommerce.auth.port.CreateValidationClient;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,17 +15,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SendVerifyMailRequest {
     private final SendVerifyMailRequestBody body;
-    private final CreatePrevalidationClient client;
+    private final CreateValidationClient client;
 
-    public PrevalidationSessionData toPrevalidationSessionData(final AccessCodeCreator accessCodeCreator){
+    public ValidationSessionData toValidationSessionData(final AccessCodeCreator accessCodeCreator){
         final AccessCode accessCode = accessCodeCreator.createAccessCode();
         final Email email = Email.from(body.getEmail());
         final ValidateInfo validateInfo = ValidateInfo.init(accessCode);
-        final Prevalidation prevalidation = Prevalidation.of(email,validateInfo);
+        final Validation validation = Validation.of(email,validateInfo);
         final Constraint constraint = Constraint.from(null);
-        return PrevalidationSessionData.of(prevalidation,constraint);
+        return ValidationSessionData.of(validation,constraint);
     }
-    public static SendVerifyMailRequest of(final CreatePrevalidationClient client,final SendVerifyMailRequestBody body){
+    public static SendVerifyMailRequest of(final CreateValidationClient client, final SendVerifyMailRequestBody body){
         return new SendVerifyMailRequest(body, client);
     }
 }

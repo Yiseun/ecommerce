@@ -1,6 +1,6 @@
 package com.ecommerce.auth.port;
 
-import com.ecommerce.auth.domain.sessiondata.prevalidation.Prevalidation;
+import com.ecommerce.auth.domain.sessiondata.validation.Validation;
 import com.ecommerce.auth.exception.application.MailSendFailureException;
 import com.ecommerce.auth.mail.MailMessageFactory;
 import com.ecommerce.auth.mail.ValidationMailMessage;
@@ -10,12 +10,12 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreatePrevalidationClient {
+public class CreateValidationClient {
     private final JavaMailSender mailSender;
     private final MailMessageFactory messageFactory;
-    public void sendMessage(final Prevalidation prevalidation){
-        final String requestEmail = prevalidation.getEmail().getValue();
-        final String requestAccessCode = prevalidation.getValidateInfo().getAccessCode().getValue();
+    public void sendMessage(final Validation validation){
+        final String requestEmail = validation.getEmail().getValue();
+        final String requestAccessCode = validation.getValidateInfo().getAccessCode().getValue();
         final ValidationMailMessage message = messageFactory.getPrevalidationMessage(requestEmail,requestAccessCode);
         try{
             mailSender.send(message);
@@ -23,7 +23,7 @@ public class CreatePrevalidationClient {
             throw new MailSendFailureException("인증메일 전송에 실패했습니다.");
         }
     }
-    public static CreatePrevalidationClient init(final JavaMailSender javaMailSender, final MailMessageFactory messageFactory){
-        return new CreatePrevalidationClient(javaMailSender,messageFactory);
+    public static CreateValidationClient init(final JavaMailSender javaMailSender, final MailMessageFactory messageFactory){
+        return new CreateValidationClient(javaMailSender,messageFactory);
     }
 }

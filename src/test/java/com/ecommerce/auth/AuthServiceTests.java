@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import com.ecommerce.auth.domain.*;
-import com.ecommerce.auth.domain.sessiondata.prevalidation.AccessCode;
+import com.ecommerce.auth.domain.sessiondata.validation.AccessCode;
 import com.ecommerce.auth.dto.*;
 import com.ecommerce.auth.encrypt.Encryptor;
 import com.ecommerce.auth.persistence.AuthEntity;
 import com.ecommerce.auth.persistence.AuthEntityRepository;
-import com.ecommerce.auth.port.CreatePrevalidationClient;
+import com.ecommerce.auth.port.CreateValidationClient;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 public class AuthServiceTests {
     @Mock
-    private CreatePrevalidationClient createPrevalidationClient;
+    private CreateValidationClient createValidationClient;
     @MockBean
     private AccessCodeCreator accessCodeCreator;
     @MockBean
@@ -40,13 +40,13 @@ public class AuthServiceTests {
         final int theOtherTryCount = 10;
         final String validateState = "FAIL";
         final String theOtherValidateState = "PREPARE";
-        final PrevalidationSessionDto requestPrevalidationSessionDto = new PrevalidationSessionDto(4,email,accessCode,tryCount,validateState);
+        final ValidationSessionDto requestValidationSessionDto = new ValidationSessionDto(4,email,accessCode,tryCount,validateState);
         final SendVerifyMailRequestBody body = new SendVerifyMailRequestBody(theOtherEmail);
-        final SendVerifyMailRequest sendVerifyMailRequest = new SendVerifyMailRequest(body,createPrevalidationClient);
-        final PrevalidationSessionDto expect = new PrevalidationSessionDto(3,theOtherEmail,theOtherAccessCode,theOtherTryCount,theOtherValidateState);
+        final SendVerifyMailRequest sendVerifyMailRequest = new SendVerifyMailRequest(body, createValidationClient);
+        final ValidationSessionDto expect = new ValidationSessionDto(3,theOtherEmail,theOtherAccessCode,theOtherTryCount,theOtherValidateState);
         when(accessCodeCreator.createAccessCode()).thenReturn(AccessCode.from(theOtherAccessCode));
 
-        final PrevalidationSessionDto result = sut.createPrevalidation(requestPrevalidationSessionDto,sendVerifyMailRequest);
+        final ValidationSessionDto result = sut.createValidation(requestValidationSessionDto,sendVerifyMailRequest);
 
         assertThat(result.getConstraintTryCount()).isEqualTo(expect.getConstraintTryCount());
         assertThat(result.getEmail()).isEqualTo(expect.getEmail());
@@ -65,11 +65,11 @@ public class AuthServiceTests {
         final int expectTryCount = 4;
         final String validateState = "PREPARE";
         final String expectValidateState = "FAIL";
-        final PrevalidationSessionDto prevalidationSessionDto = new PrevalidationSessionDto(commonConstraintTryCount,commonEmail,accessCode,tryCount,validateState);
+        final ValidationSessionDto validationSessionDto = new ValidationSessionDto(commonConstraintTryCount,commonEmail,accessCode,tryCount,validateState);
         final VerifyAccessCodeRequest request = new VerifyAccessCodeRequest(requestAccessCode);
-        final PrevalidationSessionDto expect = new PrevalidationSessionDto(commonConstraintTryCount,commonEmail,accessCode,expectTryCount,expectValidateState);
+        final ValidationSessionDto expect = new ValidationSessionDto(commonConstraintTryCount,commonEmail,accessCode,expectTryCount,expectValidateState);
 
-        final PrevalidationSessionDto result = sut.updatePrevalidation(prevalidationSessionDto,request);
+        final ValidationSessionDto result = sut.updateValidation(validationSessionDto,request);
 
         assertThat(result.getConstraintTryCount()).isEqualTo(expect.getConstraintTryCount());
         assertThat(result.getEmail()).isEqualTo(expect.getEmail());
@@ -84,7 +84,7 @@ public class AuthServiceTests {
         final String email = "dfgdfg@ergreg.rg";
         final String memberId = "dgdereds";
         final String password = "DSFDsdsf#$#@$324";
-        final PrevalidationSessionDto prevalidationSessionDto = new PrevalidationSessionDto(3,email,"DSFD33",4,"SUCCESS");
+        final ValidationSessionDto validationSessionDto = new ValidationSessionDto(3,email,"DSFD33",4,"SUCCESS");
         final SignUpRequest signUpRequest = new SignUpRequest(memberId,password);
         final SignUpResponse expect = new SignUpResponse(memberId);
         when(encryptor.encrypt(RawPassword.from(password))).thenReturn(EncryptedPassword.from("$2a$10$CacO40Z5mg6C7QigZFqXn.1hz4Zw4OXphrdNmxhfK2SmFmkt7jXD2"));
@@ -94,7 +94,7 @@ public class AuthServiceTests {
         final Auth expectAuth = Auth.of(expectMemberId,expectEmail,expectEncryptedPassword);
         final AuthEntity expectAuthEntity = AuthEntity.from(expectAuth);
 
-        final SignUpResponse resultReturn = sut.createAuth(prevalidationSessionDto,signUpRequest);
+        final SignUpResponse resultReturn = sut.createAuth(validationSessionDto,signUpRequest);
 
         assertThat(resultReturn.getMemberId()).isEqualTo(expect.getMemberId());
         final AuthEntity resultAuthEntity = authEntityRepository.findByMemberId(memberId).orElseThrow(()->new RuntimeException("테스트 실패"));

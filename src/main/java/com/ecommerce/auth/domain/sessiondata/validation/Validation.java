@@ -1,4 +1,4 @@
-package com.ecommerce.auth.domain.sessiondata.prevalidation;
+package com.ecommerce.auth.domain.sessiondata.validation;
 
 import com.ecommerce.auth.domain.Email;
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
@@ -7,10 +7,10 @@ import lombok.Getter;
 
 @EqualsAndHashCode
 @Getter
-public class Prevalidation {
+public class Validation {
     private final Email email;
     private final ValidateInfo validateInfo;
-    private Prevalidation(final Email email, final ValidateInfo validateInfo){
+    private Validation(final Email email, final ValidateInfo validateInfo){
         this.email = validate(email);
         this.validateInfo = validate(validateInfo);
     }
@@ -34,7 +34,7 @@ public class Prevalidation {
         return this.validateInfo.isComplete();
     }
 
-    public Prevalidation update(final Prevalidation request){
+    public Validation update(final Validation request){
         if(request==null){
             throw new InvalidConstructionException("입력이 존재하지 않습니다.");
         }
@@ -42,9 +42,9 @@ public class Prevalidation {
             throw new InvalidConstructionException("이메일이 초기화되지 않았습니다.");
         }
         final ValidateInfo resultValidateInfo = this.validateInfo.update(request.validateInfo);
-        return new Prevalidation(this.email,resultValidateInfo);
+        return new Validation(this.email,resultValidateInfo);
     }
-    public static Prevalidation of(final Email email,final ValidateInfo validateInfo){
-        return new Prevalidation(email,validateInfo);
+    public static Validation of(final Email email, final ValidateInfo validateInfo){
+        return new Validation(email,validateInfo);
     }
 }
