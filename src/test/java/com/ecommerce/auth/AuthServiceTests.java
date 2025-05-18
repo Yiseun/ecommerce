@@ -7,8 +7,8 @@ import com.ecommerce.auth.domain.*;
 import com.ecommerce.auth.domain.sessiondata.validation.AccessCode;
 import com.ecommerce.auth.dto.*;
 import com.ecommerce.auth.encrypt.Encryptor;
-import com.ecommerce.auth.persistence.AuthEntity;
-import com.ecommerce.auth.persistence.AuthEntityRepository;
+import com.ecommerce.auth.persistence.EncryptedAuthEntity;
+import com.ecommerce.auth.persistence.EncryptedAuthEntityRepository;
 import com.ecommerce.auth.port.CreateValidationClient;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,7 +26,7 @@ public class AuthServiceTests {
     @MockBean
     private Encryptor encryptor;
     @Autowired
-    private AuthEntityRepository authEntityRepository;
+    private EncryptedAuthEntityRepository encryptedAuthEntityRepository;
     @Autowired
     private AuthService sut;
 
@@ -87,18 +87,19 @@ public class AuthServiceTests {
         final ValidationSessionDto validationSessionDto = new ValidationSessionDto(3,email,"DSFD33",4,"SUCCESS");
         final SignUpRequest signUpRequest = new SignUpRequest(memberId,password);
         final SignUpResponse expect = new SignUpResponse(memberId);
-        when(encryptor.encrypt(RawPassword.from(password))).thenReturn(EncryptedPassword.from("$2a$10$CacO40Z5mg6C7QigZFqXn.1hz4Zw4OXphrdNmxhfK2SmFmkt7jXD2"));
         final MemberId expectMemberId = MemberId.from(memberId);
+        final Auth expectAuth = Auth.of(expectMemberId,RawPassword.from(password));
         final EncryptedPassword expectEncryptedPassword = EncryptedPassword.from("$2a$10$CacO40Z5mg6C7QigZFqXn.1hz4Zw4OXphrdNmxhfK2SmFmkt7jXD2");
-        final Auth expectAuth = Auth.of(expectMemberId,expectEncryptedPassword);
-        final AuthEntity expectAuthEntity = AuthEntity.from(expectAuth);
+        final EncryptedAuth expectEncryptedAuth = EncryptedAuth.of(expectMemberId,expectEncryptedPassword);
+        final EncryptedAuthEntity expectEncryptedAuthEntity = EncryptedAuthEntity.from(expectEncryptedAuth);
+        when(encryptor.encrypt(expectAuth)).thenReturn(expectEncryptedAuth);
 
         final SignUpResponse resultReturn = sut.createAuth(validationSessionDto,signUpRequest);
 
         assertThat(resultReturn.getMemberId()).isEqualTo(expect.getMemberId());
-        final AuthEntity resultAuthEntity = authEntityRepository.findByMemberId(memberId).orElseThrow(()->new RuntimeException("테스트 실패"));
-        assertThat(resultAuthEntity.getMemberId()).isEqualTo(expectAuthEntity.getMemberId());
-        assertThat(resultAuthEntity.getPassword()).isEqualTo(expectAuthEntity.getPassword());
+        final EncryptedAuthEntity resultEncryptedAuthEntity = encryptedAuthEntityRepository.findByMemberId(memberId).orElseThrow(()->new RuntimeException("테스트 실패"));
+        assertThat(resultEncryptedAuthEntity.getMemberId()).isEqualTo(expectEncryptedAuthEntity.getMemberId());
+        assertThat(resultEncryptedAuthEntity.getEncryptedPassword()).isEqualTo(expectEncryptedAuthEntity.getEncryptedPassword());
     }
 
 

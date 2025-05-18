@@ -1,35 +1,34 @@
 package com.ecommerce.auth.domain;
 
-import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
+import com.ecommerce.member.exception.application.domain.InvalidConstructionException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 @Getter
 public class Auth {
-    @EqualsAndHashCode.Include
-    private MemberId memberId;
-    @EqualsAndHashCode.Include
-    private EncryptedPassword encryptedPassword;
-    private Auth(final MemberId memberId,final EncryptedPassword encryptedPassword){
+    private final MemberId memberId;
+    private final RawPassword rawPassword;
+
+    private Auth(final MemberId memberId,final RawPassword rawPassword){
         this.memberId = validate(memberId);
-        this.encryptedPassword = validate(encryptedPassword);
+        this.rawPassword = validate(rawPassword);
     }
-    private MemberId validate(final MemberId memberId){
+
+    public MemberId validate(final MemberId memberId){
         if(memberId==null){
-            throw new InvalidConstructionException("memberId는 필수입력값입니다.");
+            throw new InvalidConstructionException("memberId는 null일수 없습니다.");
         }
         return memberId;
     }
-
-    private EncryptedPassword validate(final EncryptedPassword password){
-        if(password==null){
-            throw new InvalidConstructionException("password는 필수입력값입니다.");
+    public RawPassword validate(final RawPassword rawPassword){
+        if(rawPassword==null){
+            throw new InvalidConstructionException("password는 null일수 없습니다.");
         }
-        return password;
+        return rawPassword;
     }
 
-    public static Auth of(final MemberId memberId,final EncryptedPassword password){
-        return new Auth(memberId,password);
+    public static Auth of(final MemberId memberId,final RawPassword rawPassword){
+        return new Auth(memberId, rawPassword);
     }
 }

@@ -1,10 +1,12 @@
 package com.ecommerce.auth.domain;
 
 import com.ecommerce.auth.exception.application.domain.InvalidConstructionException;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.regex.Pattern;
 
+@EqualsAndHashCode
 @Getter
 public class EncryptedPassword {
     private static final Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2(a|y|b)?\\$(\\d\\d)\\$[./0-9A-Za-z]{53}");

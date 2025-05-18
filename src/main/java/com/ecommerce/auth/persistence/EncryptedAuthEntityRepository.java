@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AuthEntityRepository extends JpaRepository<AuthEntity,Long> {
+public interface EncryptedAuthEntityRepository extends JpaRepository<EncryptedAuthEntity,Long> {
 
-    Optional<AuthEntity> findByMemberId(final String memberId);
+    Optional<EncryptedAuthEntity> findByMemberId(final String memberId);
 }
