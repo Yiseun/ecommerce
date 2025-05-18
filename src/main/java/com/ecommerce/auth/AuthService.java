@@ -1,13 +1,14 @@
 package com.ecommerce.auth;
 
 import com.ecommerce.auth.domain.Auth;
+import com.ecommerce.auth.domain.EncryptedAuth;
 import com.ecommerce.auth.domain.sessiondata.ValidationSessionData;
 import com.ecommerce.auth.dto.*;
 import com.ecommerce.auth.encrypt.Encryptor;
 import com.ecommerce.auth.exception.application.DuplicatedRegistrationException;
 import com.ecommerce.auth.exception.application.PrevalidationNotCompleteException;
-import com.ecommerce.auth.persistence.AuthEntity;
-import com.ecommerce.auth.persistence.AuthEntityRepository;
+import com.ecommerce.auth.persistence.EncryptedAuthEntity;
+import com.ecommerce.auth.persistence.EncryptedAuthEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class AuthService {
-    private final AuthEntityRepository authEntityRepository;
+    private final EncryptedAuthEntityRepository encryptedAuthEntityRepository;
     private final AccessCodeCreator accessCodeCreator;
     private final Encryptor encryptor;
     @Transactional
@@ -40,12 +41,13 @@ public class AuthService {
         if(!serverValidationSessionData.isComplete()){
             throw new PrevalidationNotCompleteException("사전검증이 완료되지 않았습니다.");
         }
-        final Auth requestAuth = request.toAuth(encryptor);
-        final AuthEntity requestAuthEntity = AuthEntity.from(requestAuth);
+        final Auth requestAuth = request.toAuth();
+        final EncryptedAuth requestEncryptedAuth = encryptor.encrypt(requestAuth);
+        final EncryptedAuthEntity requestEncryptedAuthEntity = EncryptedAuthEntity.from(requestEncryptedAuth);
         try {
-            final AuthEntity resultAuthEntity = authEntityRepository.save(requestAuthEntity);
-            final Auth resultAuth = resultAuthEntity.toAuth();
-            return SignUpResponse.from(resultAuth);
+            final EncryptedAuthEntity resultEncryptedAuthEntity = encryptedAuthEntityRepository.save(requestEncryptedAuthEntity);
+            final EncryptedAuth resultEncryptedAuth = resultEncryptedAuthEntity.toEncryptedAuth();
+            return SignUpResponse.from(resultEncryptedAuth);
         }catch (DataIntegrityViolationException e){
             throw new DuplicatedRegistrationException("이미 존재하는 정보로 회원가입을 진행할수 없습니다.");
         }
