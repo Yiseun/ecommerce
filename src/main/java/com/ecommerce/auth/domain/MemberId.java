@@ -1,8 +1,10 @@
 package com.ecommerce.auth.domain;
 
 import com.ecommerce.auth.exception.application.domain.InvalidUserInputException;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+@EqualsAndHashCode
 @Getter
 public class MemberId {
     private static final int MINIMUM_ID_LENGTH = 8;
