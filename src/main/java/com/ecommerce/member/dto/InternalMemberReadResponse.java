@@ -1,9 +1,11 @@
 package com.ecommerce.member.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Builder
+@Getter
 public class InternalMemberReadResponse {
     private final String memberId;
     private final String email;
