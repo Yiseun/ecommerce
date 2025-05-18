@@ -4,9 +4,16 @@ import com.ecommerce.auth.domain.Auth;
 import com.ecommerce.auth.domain.EncryptedAuth;
 import com.ecommerce.auth.domain.sessiondata.ValidationSessionData;
 import com.ecommerce.auth.dto.*;
+import com.ecommerce.auth.dto.request.SendVerifyMailRequest;
+import com.ecommerce.auth.dto.request.SignUpRequest;
+import com.ecommerce.auth.dto.request.UpdateAuthRequest;
+import com.ecommerce.auth.dto.request.VerifyAccessCodeRequest;
+import com.ecommerce.auth.dto.response.InternalAuthUpdateResponse;
+import com.ecommerce.auth.dto.response.SignUpResponse;
 import com.ecommerce.auth.encrypt.Encryptor;
+import com.ecommerce.auth.exception.application.AuthNotFoundException;
 import com.ecommerce.auth.exception.application.DuplicatedRegistrationException;
-import com.ecommerce.auth.exception.application.PrevalidationNotCompleteException;
+import com.ecommerce.auth.exception.application.ValidationNotCompleteException;
 import com.ecommerce.auth.persistence.EncryptedAuthEntity;
 import com.ecommerce.auth.persistence.EncryptedAuthEntityRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +46,7 @@ public class AuthService {
     public SignUpResponse createAuth(final ValidationSessionDto serverData, final SignUpRequest request){
         final ValidationSessionData serverValidationSessionData = serverData.toValidationSessionData();
         if(!serverValidationSessionData.isComplete()){
-            throw new PrevalidationNotCompleteException("사전검증이 완료되지 않았습니다.");
+            throw new ValidationNotCompleteException("사전검증이 완료되지 않았습니다.");
         }
         final Auth requestAuth = request.toAuth();
         final EncryptedAuth requestEncryptedAuth = encryptor.encrypt(requestAuth);
@@ -51,5 +58,22 @@ public class AuthService {
         }catch (DataIntegrityViolationException e){
             throw new DuplicatedRegistrationException("이미 존재하는 정보로 회원가입을 진행할수 없습니다.");
         }
+    }
+
+    @Transactional
+    public void updateAuth(final ValidationSessionDto serverData,final UpdateAuthRequest request){
+        final  ValidationSessionData serverValidationSessionData = serverData.toValidationSessionData();
+        if(!serverValidationSessionData.isComplete()){
+            throw new ValidationNotCompleteException("사전검증이 완료되지 않았습니다.");
+        }
+        final InternalAuthUpdateResponse internalResponse = request.getClient().sendMessage(serverValidationSessionData);
+        final Auth requestAuth = internalResponse.toAuth(request);
+        final EncryptedAuth requestEncryptedAuth = encryptor.encrypt(requestAuth);
+        final EncryptedAuthEntity requestEncryptedAuthEntity = EncryptedAuthEntity.from(requestEncryptedAuth);
+        final EncryptedAuthEntity serverEncryptedAuthEntity = encryptedAuthEntityRepository.findByMemberId(requestEncryptedAuthEntity.getMemberId()).orElseThrow(()->new AuthNotFoundException("일치하는 유저정보를 찾지못했습니다."));
+        final EncryptedAuth serverEncryptedAuth = serverEncryptedAuthEntity.toEncryptedAuth();
+        final EncryptedAuth resultEncryptedAuth = serverEncryptedAuth.update(requestEncryptedAuth);
+        final EncryptedAuthEntity resultEncryptedAuthEntity = EncryptedAuthEntity.from(resultEncryptedAuth);
+        encryptedAuthEntityRepository.save(resultEncryptedAuthEntity);
     }
 }
