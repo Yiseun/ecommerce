@@ -1,7 +1,6 @@
 package com.ecommerce.auth.persistence;
 
-import com.ecommerce.auth.domain.Auth;
-import com.ecommerce.auth.domain.sessiondata.validation.Email;
+import com.ecommerce.auth.domain.EncryptedAuth;
 import com.ecommerce.auth.domain.EncryptedPassword;
 import com.ecommerce.auth.domain.MemberId;
 import jakarta.persistence.*;
@@ -14,24 +13,24 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AuthEntity {
+public class EncryptedAuthEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long authId;
     @Column(unique = true)
     private String memberId;
-    private String password;
+    private String encryptedPassword;
 
-    public Auth toAuth(){
+    public EncryptedAuth toEncryptedAuth(){
         final MemberId memberId = MemberId.from(this.memberId);
-        final EncryptedPassword password = EncryptedPassword.from(this.password);
-        return Auth.of(memberId,password);
+        final EncryptedPassword password = EncryptedPassword.from(this.encryptedPassword);
+        return EncryptedAuth.of(memberId,password);
     }
 
-    public static AuthEntity from(final Auth auth){
+    public static EncryptedAuthEntity from(final EncryptedAuth auth){
         final String memberId = auth.getMemberId().getValue();
         final String password = auth.getEncryptedPassword().getValue();
-        return new AuthEntity(null, memberId, password);
+        return new EncryptedAuthEntity(null, memberId, password);
     }
 }
