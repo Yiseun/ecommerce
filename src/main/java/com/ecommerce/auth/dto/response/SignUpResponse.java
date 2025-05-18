@@ -1,4 +1,4 @@
-package com.ecommerce.auth.dto;
+package com.ecommerce.auth.dto.response;
 
 import com.ecommerce.auth.domain.EncryptedAuth;
 import lombok.Getter;

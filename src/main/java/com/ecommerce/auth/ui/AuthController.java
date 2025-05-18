@@ -2,6 +2,10 @@ package com.ecommerce.auth.ui;
 
 import com.ecommerce.auth.AuthService;
 import com.ecommerce.auth.dto.*;
+import com.ecommerce.auth.dto.request.*;
+import com.ecommerce.auth.dto.request.body.SendVerifyMailRequestBody;
+import com.ecommerce.auth.dto.request.body.UpdateAuthRequestBody;
+import com.ecommerce.auth.dto.response.SignUpResponse;
 import com.ecommerce.auth.port.AuthClientRegistry;
 import com.ecommerce.auth.ui.session.ValidationSession;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +34,15 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/member/sign-up")
+    @PostMapping("/sign-up")
     public ResponseEntity<SignUpResponse> createMember(final ValidationSession validationSession, @RequestBody final SignUpRequest request){
         final SignUpResponse response = authService.createAuth(validationSession.getPrevalidationSessionData(),request);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/reset")
+    public ResponseEntity<Void> resetPassword(final ValidationSession validationSession, @RequestBody final UpdateAuthRequestBody request){
+        authService.updateAuth(validationSession.getPrevalidationSessionData(), UpdateAuthRequest.of(request,authClientRegistry.getUpdateAuthClient()));
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,4 +1,4 @@
-package com.ecommerce.auth.dto;
+package com.ecommerce.auth.dto.request;
 
 import com.ecommerce.auth.domain.sessiondata.Constraint;
 import com.ecommerce.auth.domain.sessiondata.ValidationSessionData;

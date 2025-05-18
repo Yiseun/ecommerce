@@ -1,4 +1,4 @@
-package com.ecommerce.auth.dto;
+package com.ecommerce.auth.dto.request.body;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

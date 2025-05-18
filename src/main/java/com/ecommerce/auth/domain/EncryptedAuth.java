@@ -28,6 +28,10 @@ public class EncryptedAuth {
         return password;
     }
 
+    public EncryptedAuth update(final EncryptedAuth request){
+        return new EncryptedAuth(request.memberId,request.encryptedPassword);
+    }
+
     public static EncryptedAuth of(final MemberId memberId,final EncryptedPassword password){
         return new EncryptedAuth(memberId,password);
     }
