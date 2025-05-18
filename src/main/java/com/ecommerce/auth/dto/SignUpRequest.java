@@ -10,8 +10,8 @@ public class SignUpRequest {
     private final String memberId;
     private final String password;
 
-    public Auth toAuth(final Encryptor encryptor){
-        final EncryptedPassword password = encryptor.encrypt(RawPassword.from(this.password));
+    public Auth toAuth(){
+        final RawPassword password = RawPassword.from(this.password);
         final MemberId memberId = MemberId.from(this.memberId);
         return Auth.of(memberId,password);
     }

@@ -1,6 +1,6 @@
 package com.ecommerce.auth.dto;
 
-import com.ecommerce.auth.domain.Auth;
+import com.ecommerce.auth.domain.EncryptedAuth;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class SignUpResponse {
     private final String memberId;
 
-    public static SignUpResponse from(final Auth auth){
-        return new SignUpResponse(auth.getMemberId().getValue());
+    public static SignUpResponse from(final EncryptedAuth encryptedAuth){
+        return new SignUpResponse(encryptedAuth.getMemberId().getValue());
     }
 }
