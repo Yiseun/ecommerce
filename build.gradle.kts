@@ -8,6 +8,7 @@ group = "com.ecommerce"
 version = "ECOMMERCE-1.0"
 
 repositories {
+    maven { url = uri("https://jitpack.io") }
     mavenCentral()
 }
 
@@ -16,6 +17,9 @@ dependencies {
     runtimeOnly ("org.mariadb.jdbc:mariadb-java-client:3.0.6")
     implementation("org.springframework.boot:spring-boot-starter-web:3.2.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.security:spring-security-core")
+    implementation("com.github.iamport:iamport-rest-client-java:0.2.23")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
