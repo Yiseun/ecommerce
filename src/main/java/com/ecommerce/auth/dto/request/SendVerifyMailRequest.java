@@ -1,4 +1,4 @@
-package com.ecommerce.auth.dto;
+package com.ecommerce.auth.dto.request;
 
 import com.ecommerce.auth.AccessCodeCreator;
 import com.ecommerce.auth.domain.sessiondata.Constraint;
@@ -7,6 +7,7 @@ import com.ecommerce.auth.domain.sessiondata.validation.AccessCode;
 import com.ecommerce.auth.domain.sessiondata.validation.Email;
 import com.ecommerce.auth.domain.sessiondata.validation.Validation;
 import com.ecommerce.auth.domain.sessiondata.validation.ValidateInfo;
+import com.ecommerce.auth.dto.request.body.SendVerifyMailRequestBody;
 import com.ecommerce.auth.port.CreateValidationClient;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.ecommerce.auth.dto;
+package com.ecommerce.auth.dto.request;
 
 import com.ecommerce.auth.domain.*;
 import com.ecommerce.auth.domain.sessiondata.validation.Email;
