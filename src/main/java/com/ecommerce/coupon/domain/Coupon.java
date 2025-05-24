@@ -1,7 +1,7 @@
 package com.ecommerce.coupon.domain;
 
-import com.ecommerce.coupon.exception.domain.BusinessLogicException;
-import com.ecommerce.coupon.exception.domain.FailedCreationException;
+import com.ecommerce.coupon.exception.application.domain.BusinessLogicException;
+import com.ecommerce.coupon.exception.application.domain.FailedCreationException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 

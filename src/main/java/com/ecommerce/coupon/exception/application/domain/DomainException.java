@@ -1,8 +1,8 @@
-package com.ecommerce.coupon.exception.domain;
+package com.ecommerce.coupon.exception.application.domain;
 
-import com.ecommerce.coupon.exception.CouponException;
+import com.ecommerce.coupon.exception.application.ApplicationException;
 
-public class DomainException extends CouponException {
+public class DomainException extends ApplicationException {
     public DomainException(final String message) {
         super(message);
     }
