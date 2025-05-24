@@ -3,7 +3,7 @@ package com.ecommerce.product;
 import static org.assertj.core.api.Assertions.*;
 import com.ecommerce.product.domain.Product;
 import com.ecommerce.product.domain.ProductInfo;
-import com.ecommerce.product.exception.domain.BusinessLogicException;
+import com.ecommerce.product.exception.application.domain.BusinessLogicException;
 import org.junit.jupiter.api.Test;
 
 public class ProductTests {
