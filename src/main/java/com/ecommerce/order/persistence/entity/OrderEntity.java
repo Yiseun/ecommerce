@@ -51,6 +51,7 @@ public class OrderEntity {
                 .buyerAddress(order.getOrderDetail().getBuyerAddress())
                 .buyerPostcode(order.getOrderDetail().getBuyerPostcode())
                 .orderItemEntityList(orderItemEntities)
+                .version(order.getVersion())
                 .build();
     }
 }
