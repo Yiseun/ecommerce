@@ -37,7 +37,7 @@ public class PaymentService {
         return CreatePaymentSessionResponse.from(serverPaymentSession);
     }
     @Transactional
-    public void purchase(final InternalPaymentPurchaseRequest request){
+    public void createPayment(final InternalPaymentPurchaseRequest request){
         final PaymentSession requestPaymentSession = request.toPaymentSession();
         final PaymentSessionEntity requestPaymentSessionEntity = PaymentSessionEntity.from(requestPaymentSession);
         final PaymentSessionEntity serverPaymentSessionEntity = paymentSessionRepository.findByOrderId(requestPaymentSessionEntity.getOrderId()).orElseThrow(()->new PaymentSessionNotFoundException("일치하는 결제정보가 존재하지않습니다."));
