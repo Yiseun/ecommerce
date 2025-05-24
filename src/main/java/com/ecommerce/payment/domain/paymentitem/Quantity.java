@@ -1,6 +1,6 @@
 package com.ecommerce.payment.domain.paymentitem;
 
-import com.ecommerce.payment.exception.domain.FailedCreationException;
+import com.ecommerce.payment.exception.application.domain.FailedCreationException;
 import lombok.Getter;
 
 @Getter

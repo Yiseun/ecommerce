@@ -1,4 +1,4 @@
-package com.ecommerce.payment.exception.domain;
+package com.ecommerce.payment.exception.application.domain;
 
 public class EqualityException extends DomainException{
     public EqualityException(final String message) {
