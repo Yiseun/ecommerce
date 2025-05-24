@@ -3,7 +3,7 @@ package com.ecommerce.coupon;
 import static org.assertj.core.api.Assertions.*;
 import com.ecommerce.coupon.domain.Coupon;
 import com.ecommerce.coupon.domain.CouponId;
-import com.ecommerce.coupon.exception.domain.BusinessLogicException;
+import com.ecommerce.coupon.exception.application.domain.BusinessLogicException;
 import org.junit.jupiter.api.Test;
 
 public class CouponTests {
