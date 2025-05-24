@@ -1,12 +1,11 @@
 package com.ecommerce.payment.domain;
 
-import com.ecommerce.payment.exception.domain.FailedCreationException;
+import com.ecommerce.payment.exception.application.domain.FailedCreationException;
 
 public enum PayMethod {
     CARD,
     MOBILE,
-    TRANSFER,
-    VIRTURAL_ACCOUNT;
+    TRANSFER;
 
     public static PayMethod from(final String value){
         try {

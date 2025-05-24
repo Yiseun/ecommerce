@@ -189,8 +189,8 @@ public class PaymentServiceTests {
                 .set(javaGetter(FindPortoneResponse::getPayMethod),request.getPayMethod())
                 .sample();
         when(portoneClient.findBy(request)).thenReturn(portoneResponse);
-        paymentService.purchase(request);
+        paymentService.createPayment(request);
 
-        assertThatThrownBy(()->paymentService.purchase(request)).isInstanceOf(DuplicatedPurchaseException.class);
+        assertThatThrownBy(()->paymentService.createPayment(request)).isInstanceOf(DuplicatedPurchaseException.class);
     }
 }

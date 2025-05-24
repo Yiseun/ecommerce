@@ -4,7 +4,7 @@ import com.ecommerce.order.domain.*;
 import com.ecommerce.order.domain.orderitem.*;
 import com.ecommerce.order.dto.OrderRequest;
 import com.ecommerce.order.port.OrderClient;
-import com.ecommerce.order.port.OrderCreateClient;
+import com.ecommerce.order.port.OrderIdCreateClient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +42,7 @@ public class CreateOrderIdRequest implements OrderRequest {
                 .tmpOrderItems(tmpOrderItems)
                 .build();
     }
-    public static CreateOrderIdRequest of(final String memberId,final CreateOrderIdRequestBody body,final OrderCreateClient client){
+    public static CreateOrderIdRequest of(final String memberId,final CreateOrderIdRequestBody body,final OrderIdCreateClient client){
         return new CreateOrderIdRequest(memberId, body, client);
     }
 }
-
-//패키지변경
-//TmpOrder변경

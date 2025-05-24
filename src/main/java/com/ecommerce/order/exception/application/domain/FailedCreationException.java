@@ -1,4 +1,4 @@
-package com.ecommerce.order.exception.domain;
+package com.ecommerce.order.exception.application.domain;
 
 public class FailedCreationException extends DomainException{
     public FailedCreationException(final String message) {

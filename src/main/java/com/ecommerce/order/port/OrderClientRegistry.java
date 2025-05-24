@@ -14,10 +14,10 @@ public class OrderClientRegistry {
     private final ProductReceiver productReceiver;
     private final CouponReceiver couponReceiver;
 
-    public OrderCreateClient createOrderCreateClient(){
-        return OrderCreateClient.of(couponReceiver,productReceiver);
+    public OrderIdCreateClient getOrderCreateClient(){
+        return OrderIdCreateClient.of(couponReceiver,productReceiver);
     }
-    public OrderCompleteClient createOrderCompleteClient(){
-        return OrderCompleteClient.of(paymentReceiver,productReceiver,couponReceiver);
+    public OrderCreateClient getOrderCompleteClient(){
+        return OrderCreateClient.of(paymentReceiver,productReceiver,couponReceiver);
     }
 }

@@ -22,13 +22,13 @@ public class OrderController {
     private final OrderService orderService;
     @PostMapping("/create")
     public ResponseEntity<CreateOrderIdResponse> createId(final String memberId, @RequestBody final CreateOrderIdRequestBody body){
-        final CreateOrderIdResponse response = orderService.createOrderId(CreateOrderIdRequest.of(memberId,body,registry.createOrderCreateClient()));
+        final CreateOrderIdResponse response = orderService.createOrderId(CreateOrderIdRequest.of(memberId,body,registry.getOrderCreateClient()));
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/complete")
     public ResponseEntity<Void> completeOrder(final String memberId, @RequestBody CompleteOrderRequestBody body){
-        orderService.completeOrder(CompleteOrderRequest.of(memberId,body,registry.createOrderCompleteClient()));
+        orderService.createOrder(CompleteOrderRequest.of(memberId,body,registry.getOrderCompleteClient()));
         return ResponseEntity.ok().build();
     }
 }

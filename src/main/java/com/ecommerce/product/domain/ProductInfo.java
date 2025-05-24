@@ -1,6 +1,6 @@
 package com.ecommerce.product.domain;
 
-import com.ecommerce.product.exception.domain.FailedCreationException;
+import com.ecommerce.product.exception.application.domain.FailedCreationException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 

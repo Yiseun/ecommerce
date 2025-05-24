@@ -1,9 +1,9 @@
 package com.ecommerce.product.domain;
 
-import com.ecommerce.payment.exception.domain.EqualityException;
-import com.ecommerce.payment.exception.domain.UnderstockedException;
-import com.ecommerce.product.exception.domain.BusinessLogicException;
-import com.ecommerce.product.exception.domain.FailedCreationException;
+import com.ecommerce.payment.exception.application.domain.EqualityException;
+import com.ecommerce.payment.exception.application.domain.UnderstockedException;
+import com.ecommerce.product.exception.application.domain.BusinessLogicException;
+import com.ecommerce.product.exception.application.domain.FailedCreationException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 

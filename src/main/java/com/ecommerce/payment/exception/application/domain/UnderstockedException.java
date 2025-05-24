@@ -1,4 +1,4 @@
-package com.ecommerce.payment.exception.domain;
+package com.ecommerce.payment.exception.application.domain;
 
 public class UnderstockedException extends DomainException{
     public UnderstockedException(final String message) {

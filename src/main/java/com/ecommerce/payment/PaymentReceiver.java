@@ -10,6 +10,6 @@ public class PaymentReceiver {
     private final PaymentService paymentService;
 
     public void purchase(final InternalPaymentPurchaseRequest request){
-        paymentService.purchase(request);
+        paymentService.createPayment(request);
     }
 }

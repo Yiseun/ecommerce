@@ -34,7 +34,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void completeOrder(final CompleteOrderRequest request){
+    public void createOrder(final CompleteOrderRequest request){
         final TmpOrder requestTmpOrder = request.toTmpOrder();
         final TmpOrderEntity requestTmpOrderEntity = TmpOrderEntity.from(requestTmpOrder);
         final TmpOrderEntity serverTmpOrderEntity = tmpOrderRepository.findById(requestTmpOrderEntity.getOrderId()).orElseThrow(()-> new OrderNotFoundException("주문정보를 찾을수 없습니다."));

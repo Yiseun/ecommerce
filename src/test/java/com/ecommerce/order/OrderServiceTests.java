@@ -150,9 +150,9 @@ public class OrderServiceTests {
                 .set(javaGetter(CompleteOrderRequest::getClient),orderClient)
                 .set(javaGetter(CompleteOrderRequest::getMemberId),serverTmpOrderEntity.getMemberId())
                 .sample();
-        orderService.completeOrder(request);
+        orderService.createOrder(request);
 
-        assertThatThrownBy(()->orderService.completeOrder(request)).isInstanceOf(DuplicateRequestException.class);
+        assertThatThrownBy(()->orderService.createOrder(request)).isInstanceOf(DuplicateRequestException.class);
     }
 
 }

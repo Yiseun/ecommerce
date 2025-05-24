@@ -1,8 +1,8 @@
-package com.ecommerce.payment.exception.domain;
+package com.ecommerce.payment.exception.application.domain;
 
-import com.ecommerce.payment.exception.PaymentException;
+import com.ecommerce.payment.exception.application.ApplicationException;
 
-public class DomainException extends PaymentException {
+public class DomainException extends ApplicationException {
     public DomainException(final String message) {
         super(message);
     }

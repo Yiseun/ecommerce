@@ -4,7 +4,7 @@ import com.ecommerce.order.domain.*;
 import com.ecommerce.order.domain.orderitem.*;
 import com.ecommerce.order.dto.OrderRequest;
 import com.ecommerce.order.port.OrderClient;
-import com.ecommerce.order.port.OrderCompleteClient;
+import com.ecommerce.order.port.OrderCreateClient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class CompleteOrderRequest implements OrderRequest {
                 .build();
     }
 
-    public static CompleteOrderRequest of(final String memberId, final CompleteOrderRequestBody body, final OrderCompleteClient client){
+    public static CompleteOrderRequest of(final String memberId, final CompleteOrderRequestBody body, final OrderCreateClient client){
         return new CompleteOrderRequest(memberId,body,client);
     }
 }

@@ -1,4 +1,4 @@
-package com.ecommerce.product.exception.domain;
+package com.ecommerce.product.exception.application.domain;
 
 public class BusinessLogicException extends DomainException{
     public BusinessLogicException(final String message) {

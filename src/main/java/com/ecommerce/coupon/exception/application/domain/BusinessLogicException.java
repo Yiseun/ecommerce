@@ -1,4 +1,4 @@
-package com.ecommerce.coupon.exception.domain;
+package com.ecommerce.coupon.exception.application.domain;
 
 public class BusinessLogicException extends DomainException {
     public BusinessLogicException(final String message) {

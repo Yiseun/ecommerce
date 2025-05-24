@@ -7,7 +7,7 @@ import com.ecommerce.payment.domain.PgProvider;
 import com.ecommerce.payment.domain.paymentitem.PaymentItem;
 import com.ecommerce.payment.domain.paymentitem.Price;
 import com.ecommerce.payment.domain.session.PaymentSession;
-import com.ecommerce.payment.exception.domain.FailedCreationException;
+import com.ecommerce.payment.exception.application.domain.FailedCreationException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import lombok.Builder;
 import lombok.Getter;
