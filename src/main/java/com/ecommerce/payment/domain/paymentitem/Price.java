@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @EqualsAndHashCode
 @Getter
-public class gPrice {
+public class Price {
     private static final Long MINIMUM_PURCHASE_PRICE = 0L;
     private final Long value;
     private Price(final String value){
