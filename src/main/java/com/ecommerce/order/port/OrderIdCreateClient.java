@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrderCreateClient implements OrderClient{
+public class OrderIdCreateClient implements OrderClient{
 
     private final CouponReceiver couponReceiver;
     private final ProductReceiver productReceiver;
@@ -44,7 +44,7 @@ public class OrderCreateClient implements OrderClient{
         productReceiver.validate(InternalProductValidateRequest.from(productDtos));
     }
 
-    public static OrderCreateClient of(final CouponReceiver couponReceiver,final ProductReceiver productReceiver){
-        return new OrderCreateClient(couponReceiver,productReceiver);
+    public static OrderIdCreateClient of(final CouponReceiver couponReceiver, final ProductReceiver productReceiver){
+        return new OrderIdCreateClient(couponReceiver,productReceiver);
     }
 }

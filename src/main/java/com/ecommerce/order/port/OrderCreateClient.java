@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrderCompleteClient implements OrderClient{
+public class OrderCreateClient implements OrderClient{
     private final PaymentReceiver paymentReceiver;
     private final ProductReceiver productReceiver;
     private final CouponReceiver couponReceiver;
@@ -75,7 +75,7 @@ public class OrderCompleteClient implements OrderClient{
         couponReceiver.use(InternalCouponUseRequest.of(request.getMemberId(),couponRequests));
     }
 
-    public static OrderCompleteClient of(final PaymentReceiver paymentReceiver,final ProductReceiver productReceiver,final CouponReceiver couponReceiver){
-        return new OrderCompleteClient(paymentReceiver, productReceiver, couponReceiver);
+    public static OrderCreateClient of(final PaymentReceiver paymentReceiver, final ProductReceiver productReceiver, final CouponReceiver couponReceiver){
+        return new OrderCreateClient(paymentReceiver, productReceiver, couponReceiver);
     }
 }
