@@ -1,7 +1,7 @@
 package com.ecommerce.order.domain;
 
 import com.ecommerce.order.domain.orderitem.*;
-import com.ecommerce.payment.exception.domain.FailedCreationException;
+import com.ecommerce.payment.exception.application.domain.FailedCreationException;
 import lombok.*;
 
 import java.util.List;

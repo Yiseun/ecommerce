@@ -2,8 +2,7 @@ package com.ecommerce.order.domain;
 
 import com.ecommerce.order.domain.orderitem.OrderItem;
 import com.ecommerce.order.domain.orderitem.Price;
-import com.ecommerce.order.exception.OrderException;
-import com.ecommerce.order.exception.domain.FailedCreationException;
+import com.ecommerce.order.exception.application.domain.FailedCreationException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
