@@ -18,12 +18,14 @@ public class Order {
     private final OrderDetail orderDetail;
     private final Price originPrice;
     private final List<OrderItem> orderItems;
+    private final Long version;
 
-    private Order(final OrderBase orderBase,final OrderDetail orderDetail,final Price originPrice,final List<OrderItem> orderItems){
+    private Order(final OrderBase orderBase,final OrderDetail orderDetail,final Price originPrice,final List<OrderItem> orderItems,final Long version){
         this.orderBase = orderBase;
         this.orderDetail = orderDetail;
         this.originPrice = originPrice;
         this.orderItems = validateOrderItems(orderItems);
+        this.version = version;
     }
 
     private List<OrderItem> validateOrderItems(final List<OrderItem> orderItems){
@@ -33,7 +35,7 @@ public class Order {
         return orderItems;
     }
 
-    public static Order of(final OrderBase orderBase,final OrderDetail orderDetail,final Price totalPrice,final List<OrderItem> orderItems){
-        return new Order(orderBase,orderDetail,totalPrice,orderItems);
+    public static Order of(final OrderBase orderBase,final OrderDetail orderDetail,final Price totalPrice,final List<OrderItem> orderItems,final Long version){
+        return new Order(orderBase,orderDetail,totalPrice,orderItems,version);
     }
 }

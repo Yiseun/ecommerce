@@ -49,6 +49,6 @@ public class TmpOrder {
             final TrackingInfo trackingInfo = TrackingInfo.init();
             return OrderItem.of(orderItemInfo,orderItemState,trackingInfo);
         }).toList();
-        return Order.of(orderBase,orderDetail,price,orderItems);
+        return Order.of(orderBase,orderDetail,price,orderItems,null);
     }
 }
