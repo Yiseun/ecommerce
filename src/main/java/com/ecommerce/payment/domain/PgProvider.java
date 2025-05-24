@@ -1,6 +1,6 @@
 package com.ecommerce.payment.domain;
 
-import com.ecommerce.payment.exception.domain.FailedCreationException;
+import com.ecommerce.payment.exception.application.domain.FailedCreationException;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -19,7 +19,6 @@ public enum PgProvider {
         enablePgProvier.put(PayMethod.CARD,List.of(PgProvider.KAKAO,PgProvider.KICC,PgProvider.NAVER));
         enablePgProvier.put(PayMethod.MOBILE,List.of(PgProvider.KAKAO,PgProvider.KICC,PgProvider.NAVER));
         enablePgProvier.put(PayMethod.TRANSFER,List.of(PgProvider.KAKAO,PgProvider.KICC,PgProvider.NAVER));
-        enablePgProvier.put(PayMethod.VIRTURAL_ACCOUNT,List.of(PgProvider.KAKAO,PgProvider.KICC,PgProvider.NAVER));
     }
 
 
