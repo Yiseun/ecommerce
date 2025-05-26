@@ -10,14 +10,14 @@ public class OrderItemId {
     private static final Long MINIMUM_ORDERITEM_VALUE = 0L;
     private final Long value;
 
+    private OrderItemId(){
+        this.value = null;
+    }
     private OrderItemId(final String value){
-        this.value = validate(value);
+        this.value = parse(value);
     }
 
-    private Long validate(final String value){
-        if(value==null){
-            return null;
-        }
+    private Long parse(final String value){
         try{
             final Long longValue = Long.valueOf(value);
             if(longValue<MINIMUM_ORDERITEM_VALUE){
@@ -30,14 +30,11 @@ public class OrderItemId {
     }
 
     public static OrderItemId from(final String value){
-        if(value==null){
-            throw new FailedCreationException("OrderItemId는 필수입력 값입니다.");
-        }
         return new OrderItemId(value);
     }
 
     public static OrderItemId createEmpty(){
-        return new OrderItemId(null);
+        return new OrderItemId();
     }
 
 }

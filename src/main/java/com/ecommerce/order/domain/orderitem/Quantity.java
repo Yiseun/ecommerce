@@ -10,10 +10,10 @@ public class Quantity {
     private static final Long MINIMUM_ORDER_QUANTITY = 1L;
     private final Long value;
     private Quantity(final String value){
-        this.value = validate(value);
+        this.value = parse(value);
     }
 
-    private Long validate(final String value){
+    private Long parse(final String value){
         try{
             final Long longValue = Long.valueOf(value);
             if(longValue<MINIMUM_ORDER_QUANTITY){
