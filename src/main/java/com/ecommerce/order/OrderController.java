@@ -1,9 +1,6 @@
 package com.ecommerce.order;
 
-import com.ecommerce.order.dto.request.CompleteOrderRequest;
-import com.ecommerce.order.dto.request.CompleteOrderRequestBody;
-import com.ecommerce.order.dto.request.CreateOrderIdRequest;
-import com.ecommerce.order.dto.request.CreateOrderIdRequestBody;
+import com.ecommerce.order.dto.request.*;
 import com.ecommerce.order.dto.response.CreateOrderIdResponse;
 import com.ecommerce.order.port.OrderClientRegistry;
 import lombok.RequiredArgsConstructor;
@@ -31,4 +28,11 @@ public class OrderController {
         orderService.createOrder(CompleteOrderRequest.of(memberId,body,registry.getOrderCompleteClient()));
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<Void> cancelOrder(final String memberId, @RequestBody CancelOrderRequestBody body){
+        orderService.updateOrder(CancelOrderRequest.of(memberId,body,registry.getOrderCancelClient()));
+        return ResponseEntity.ok().build();
+    }
+
 }
