@@ -1,5 +1,6 @@
 package com.ecommerce.order.domain;
 
+import com.ecommerce.order.exception.application.domain.FailedCreationException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -11,11 +12,22 @@ public class OrderBase {
 
     private OrderBase(final OrderId orderId,final String memberId){
         this.orderId = orderId;
-        this.memberId = memberId;
+        this.memberId = validate(memberId);
     }
     private OrderBase(final String memberId){
         this.orderId = OrderId.createEmpty();
-        this.memberId = memberId;
+        this.memberId = validate(memberId);
+    }
+
+    private String validate(final String memberId){
+        if(memberId==null){
+            throw new FailedCreationException("memberId를 입력해주세요.");
+        }
+        return memberId;
+    }
+
+    public boolean isEmpty(){
+        return this.orderId.isEmpty();
     }
 
     public static OrderBase init(final String memberId){
