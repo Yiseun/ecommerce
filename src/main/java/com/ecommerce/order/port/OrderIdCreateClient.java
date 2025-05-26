@@ -4,7 +4,6 @@ import com.ecommerce.coupon.CouponReceiver;
 import com.ecommerce.coupon.dto.CouponRequest;
 import com.ecommerce.coupon.dto.InternalCouponValidateRequest;
 import com.ecommerce.order.dto.request.CreateOrderIdRequest;
-import com.ecommerce.order.dto.OrderRequest;
 import com.ecommerce.product.ProductReceiver;
 import com.ecommerce.product.dto.InternalProductValidateRequest;
 import com.ecommerce.product.dto.ProductDto;
@@ -14,14 +13,12 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrderIdCreateClient implements OrderClient{
+public class OrderIdCreateClient {
 
     private final CouponReceiver couponReceiver;
     private final ProductReceiver productReceiver;
 
-    @Override
-    public void sendMessage(final OrderRequest rawRequest){
-        final CreateOrderIdRequest request = (CreateOrderIdRequest) rawRequest;
+    public void sendMessage(final CreateOrderIdRequest request){
         final List<CouponRequest> couponRequests = request.getBody().getOrderItemDtos().stream()
                 .map(i->CouponRequest.builder()
                                 .userCouponId(i.getUserCouponId())
