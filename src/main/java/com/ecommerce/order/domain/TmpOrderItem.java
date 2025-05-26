@@ -1,6 +1,5 @@
 package com.ecommerce.order.domain;
 
-import com.ecommerce.order.domain.orderitem.OrderItemId;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,7 +8,8 @@ import lombok.Getter;
 @EqualsAndHashCode
 @Getter
 public class TmpOrderItem {
-    private OrderItemId orderItemId;
+    @EqualsAndHashCode.Exclude
+    private Long tmpOrderItemId;
     private String productId;
     private String productName;
     private String quantity;
