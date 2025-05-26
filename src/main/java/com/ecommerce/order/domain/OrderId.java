@@ -9,14 +9,15 @@ import lombok.Getter;
 public class OrderId {
     private static final long MINIMUM_ORDERID_VALUE = 0;
     private final Long value;
+
+    private OrderId(){
+        this.value = null;
+    }
     private OrderId(final String value){
-        this.value = validate(value);
+        this.value = parse(value);
     }
 
-    private Long validate(String value){
-        if(value==null){
-            return null;
-        }
+    private Long parse(final String value){
         try {
             final long longTypeValue = Long.parseLong(value);
             if(longTypeValue<MINIMUM_ORDERID_VALUE){
@@ -28,13 +29,14 @@ public class OrderId {
         }
     }
 
+    public boolean isEmpty(){
+        return value == null;
+    }
+
     public static OrderId from(final String value){
-        if(value==null){
-            throw new FailedCreationException("OrderId는 필수입니다.");
-        }
         return new OrderId(value);
     }
     public static OrderId createEmpty(){
-        return new OrderId(null);
+        return new OrderId();
     }
 }
