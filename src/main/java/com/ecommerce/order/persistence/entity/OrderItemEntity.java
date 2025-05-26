@@ -1,16 +1,17 @@
 package com.ecommerce.order.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
+import lombok.*;
 
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderItemEntityId;
-    @Column(unique = true)
-    private String orderItemId;
+    private Long orderItemId;
     private String productId;
     private String productName;
     private String quantity;

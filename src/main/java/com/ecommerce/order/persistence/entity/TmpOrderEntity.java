@@ -1,16 +1,13 @@
 package com.ecommerce.order.persistence.entity;
 
 import com.ecommerce.order.domain.*;
-import com.ecommerce.order.domain.orderitem.*;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,7 +29,7 @@ public class TmpOrderEntity {
     public TmpOrder toTmpOrder(){
         final List<TmpOrderItem> tmpOrderItems = tmpOrderItemEntityList.stream().map(tmpOrderItemEntity ->
                 TmpOrderItem.builder()
-                        .orderItemId(OrderItemId.from(tmpOrderItemEntity.getOrderItemId().toString()))
+                        .tmpOrderItemId(tmpOrderItemEntity.getTmpOrderItemId())
                         .productId(tmpOrderItemEntity.getProductId())
                         .productName(tmpOrderItemEntity.getProductName())
                         .quantity(tmpOrderItemEntity.getQuantity())
@@ -70,7 +67,7 @@ public class TmpOrderEntity {
 
         final List<TmpOrderItemEntity> tmpOrderItemEntityList = tmpOrder.getTmpOrderItems().stream()
                 .map(tmpOrderItem->TmpOrderItemEntity.builder()
-                        .orderItemId(tmpOrderItem.getOrderItemId().getValue())
+                        .tmpOrderItemId(tmpOrderItem.getTmpOrderItemId())
                         .productId(tmpOrderItem.getProductId())
                         .productName(tmpOrderItem.getProductName())
                         .quantity(tmpOrderItem.getQuantity())
