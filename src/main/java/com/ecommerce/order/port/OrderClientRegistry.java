@@ -20,4 +20,7 @@ public class OrderClientRegistry {
     public OrderCreateClient getOrderCompleteClient(){
         return OrderCreateClient.of(paymentReceiver,productReceiver,couponReceiver);
     }
+    public OrderCancelClient getOrderCancelClient(){
+        return OrderCancelClient.from(paymentReceiver);
+    }
 }

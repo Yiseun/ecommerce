@@ -35,7 +35,7 @@ public class TmpOrder {
         final Price price = Price.from(this.totalPrice);
         final List<OrderItem> orderItems = tmpOrderItems.stream().map(tmpOrderItem -> {
             final OrderItemInfo orderItemInfo = OrderItemInfo.builder()
-                    .orderItemId(OrderItemId.from(tmpOrderItem.getOrderItemId().getValue().toString()))
+                    .orderItemId(OrderItemId.createEmpty())
                     .productId(tmpOrderItem.getProductId())
                     .productName(tmpOrderItem.getProductName())
                     .quantity(Quantity.from(tmpOrderItem.getQuantity()))
@@ -45,10 +45,8 @@ public class TmpOrder {
                     .couponId(tmpOrderItem.getCouponId())
                     .userCouponId(tmpOrderItem.getUserCouponId())
                     .build();
-            final OrderItemState orderItemState = OrderItemState.init();
-            final TrackingInfo trackingInfo = TrackingInfo.init();
-            return OrderItem.of(orderItemInfo,orderItemState,trackingInfo);
+            return OrderItem.from(orderItemInfo);
         }).toList();
-        return Order.of(orderBase,orderDetail,price,orderItems,null);
+        return Order.of(null,orderBase,orderDetail,price,orderItems,null);
     }
 }

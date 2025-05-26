@@ -4,6 +4,7 @@ import com.ecommerce.order.domain.Order;
 import com.ecommerce.order.domain.TmpOrder;
 import com.ecommerce.order.dto.request.CompleteOrderRequest;
 import com.ecommerce.order.dto.request.CreateOrderIdRequest;
+import com.ecommerce.order.dto.request.UpdateOrderRequest;
 import com.ecommerce.order.dto.response.CreateOrderIdResponse;
 import com.ecommerce.order.exception.application.OrderNotFoundException;
 import com.ecommerce.order.persistence.OrderRepository;
@@ -42,10 +43,23 @@ public class OrderService {
         final Order requestOrder = requestTmpOrder.createOrderWith(serverTmpOrder);
         final OrderEntity requestOrderEntity = OrderEntity.from(requestOrder);
         try {
-            orderRepository.save(requestOrderEntity);
+            final OrderEntity resultOrderEntity = orderRepository.save(requestOrderEntity);
+            final Order resultOrder = resultOrderEntity.toOrder();
+            request.getClient().sendMessage(request,resultOrder);
         }catch (DataIntegrityViolationException e){
             throw new DuplicateRequestException("이미 생성완료된 주문입니다.");
         }
+    }
+
+    @Transactional
+    public void updateOrder(final UpdateOrderRequest request){
+        final Order requestOrder = request.toOrder();
+        final OrderEntity requestOrderEntity = OrderEntity.from(requestOrder);
+        final OrderEntity serverOrderEntity = orderRepository.findByOrderId(requestOrderEntity.getOrderId()).orElseThrow(()->new OrderNotFoundException("주문정보를 찾을수 없습니다."));
+        final Order serverOrder = serverOrderEntity.toOrder();
+        final Order resultOrder = serverOrder.update(requestOrder);
+        final OrderEntity resultOrderEntity = OrderEntity.from(resultOrder);
+        orderRepository.save(resultOrderEntity);
         request.getClient().sendMessage(request);
     }
 }

@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity
 @Getter
@@ -14,7 +14,7 @@ import lombok.*;
 public class TmpOrderItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderItemId;
+    private Long tmpOrderItemId;
     private String productId;
     private String productName;
     private String quantity;

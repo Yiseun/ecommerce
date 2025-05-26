@@ -3,6 +3,7 @@ package com.ecommerce.order.port;
 import com.ecommerce.coupon.CouponReceiver;
 import com.ecommerce.coupon.dto.CouponRequest;
 import com.ecommerce.coupon.dto.InternalCouponUseRequest;
+import com.ecommerce.order.domain.Order;
 import com.ecommerce.order.dto.OrderRequest;
 import com.ecommerce.order.dto.request.CompleteOrderRequest;
 import com.ecommerce.payment.PaymentReceiver;
@@ -17,14 +18,12 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrderCreateClient implements OrderClient{
+public class OrderCreateClient {
     private final PaymentReceiver paymentReceiver;
     private final ProductReceiver productReceiver;
     private final CouponReceiver couponReceiver;
 
-    @Override
-    public void sendMessage(OrderRequest rawRequest) {
-        final CompleteOrderRequest request = (CompleteOrderRequest) rawRequest;
+    public void sendMessage(final CompleteOrderRequest request, final Order order){
         final List<PurchaseItemDto> purchaseItemDtos = request.getBody().getOrderItemDtos().stream().map(orderItemDto ->
                 PurchaseItemDto.builder()
                         .productId(orderItemDto.getProductId())
