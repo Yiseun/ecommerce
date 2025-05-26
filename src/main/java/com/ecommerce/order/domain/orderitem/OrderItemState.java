@@ -6,44 +6,54 @@ import com.ecommerce.order.exception.application.domain.InvalidConstructionExcep
 public enum OrderItemState {
     ORDER_COMPLETE {
         @Override
-        public OrderItemState updateDetail(OrderItemState request) {
-            return null;
+        protected OrderItemState updateInternal(OrderItemState request) {
+            if(this.equals(request)||request.equals(CANCELED)||request.equals(ON_DELIVERY)){
+                return request;
+            }
+            throw new InvalidConstructionException("변경할수없는 상태로 변경을 시도하고 있습니다.");
         }
     },
     CANCELED {
         @Override
-        public OrderItemState updateDetail(OrderItemState request) {
-            return null;
+        protected OrderItemState updateInternal(OrderItemState request) {
+            throw new InvalidConstructionException("변경할수없는 상태에서 변경을 시도하고 있습니다.");
         }
     },
     ON_DELIVERY {
         @Override
-        public OrderItemState updateDetail(OrderItemState request) {
-            return null;
+        protected OrderItemState updateInternal(OrderItemState request) {
+            if(this.equals(request)||request.equals(COMPLETE_DELIVERY)||request.equals(ORDER_FINALIZED)){
+                return request;
+            }
+            throw new InvalidConstructionException("변경할수없는 상태로 변경을 시도하고 있습니다.");
         }
     },
     COMPLETE_DELIVERY {
         @Override
-        public OrderItemState updateDetail(OrderItemState request) {
-            return
+        protected OrderItemState updateInternal(OrderItemState request) {
+            if(this.equals(request)||request.equals(ORDER_FINALIZED)){
+                return request;
+            }
+            throw new InvalidConstructionException("변경할수없는 상태로 변경을 시도하고 있습니다.");
         }
     },
     ORDER_FINALIZED {
         @Override
-        public OrderItemState updateDetail(OrderItemState request) {
-            return null;
+        protected OrderItemState updateInternal(OrderItemState request) {
+            throw new InvalidConstructionException("변경할수없는 상태에서 변경을 시도하고 있습니다.");
         }
     };
     public OrderItemState update(final OrderItemState request){
         if(this.equals(request)||request==null){
             return this;
         }
-        return this.updateDetail(request);
+        return this.updateInternal(request);
     }
     public boolean isUpdatableStateForTrackingInfo(final OrderItemState preState){
         return this.equals(OrderItemState.ORDER_COMPLETE) && this.equals(preState);
     }
-    protected abstract OrderItemState updateDetail(final OrderItemState request);
+    protected abstract OrderItemState updateInternal(final OrderItemState request);
+
     public static OrderItemState init(){
         return OrderItemState.ORDER_COMPLETE;
     }
@@ -54,8 +64,6 @@ public enum OrderItemState {
             throw new FailedCreationException("올바르지않은 입력입니다.");
         }
     }
-    //from에서 null을 잡는이유는 유저의 입력판별
-    //createEmpty를 따로 만든 이유는 개발자의 의도된 nullable객체를 만들기위함
     public static OrderItemState createEmpty(){
         return null;
     }
