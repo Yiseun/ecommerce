@@ -12,23 +12,9 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateOrderIdResponse {
     private final String orderId;
-    private final List<OrderItemDto> orderItemDtos;
 
     public static CreateOrderIdResponse from(final TmpOrder tmpOrder){
         final String orderId = tmpOrder.getOrderId().getValue().toString();
-        final List<OrderItemDto> orderItemDtoList = tmpOrder.getTmpOrderItems().stream().map(i->
-                OrderItemDto.builder()
-                        .orderItemId(i.getOrderItemId().getValue().toString())
-                        .productId(i.getProductId())
-                        .productName(i.getProductName())
-                        .quantity(i.getQuantity())
-                        .price(i.getPrice())
-                        .discountPrice(i.getDiscountPrice())
-                        .couponDiscountPercent(i.getCouponDiscountPercent())
-                        .couponId(i.getCouponId())
-                        .userCouponId(i.getUserCouponId())
-                        .build()
-        ).toList();
-        return new CreateOrderIdResponse(orderId,orderItemDtoList);
+        return new CreateOrderIdResponse(orderId);
     }
 }
