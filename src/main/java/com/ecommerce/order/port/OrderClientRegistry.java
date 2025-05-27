@@ -23,4 +23,7 @@ public class OrderClientRegistry {
     public OrderCancelClient getOrderCancelClient(){
         return OrderCancelClient.from(paymentReceiver);
     }
+    public NoOperationClient getNoOperationClient(){
+        return NoOperationClient.init();
+    }
 }

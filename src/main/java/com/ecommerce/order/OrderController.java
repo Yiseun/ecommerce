@@ -35,4 +35,9 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/trackingInfo/register")
+    public ResponseEntity<Void> registerTrackingInfo(final String memberId, @RequestBody RegisterTrackingInfoRequestBody body){
+        orderService.updateOrder(RegisterTrackingInfoRequest.of(memberId,body,registry.getNoOperationClient()));
+        return ResponseEntity.ok().build();
+    }
 }
