@@ -7,6 +7,7 @@ import com.ecommerce.order.exception.application.domain.InvalidConstructionExcep
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,14 +24,16 @@ public class Order {
     private final Price originPrice;
     private final List<OrderItem> orderItems;
     private final Long version;
+    private final LocalDate createdTime;
 
-    private Order(final Long orderEntityId,final OrderBase orderBase,final OrderDetail orderDetail,final Price originPrice,final List<OrderItem> orderItems,final Long version){
+    private Order(final Long orderEntityId,final OrderBase orderBase,final OrderDetail orderDetail,final Price originPrice,final List<OrderItem> orderItems,final Long version,final LocalDate createdTime){
         this.orderEntityId = orderEntityId;
         this.orderBase = validate(orderBase);
         this.orderDetail = validate(orderDetail);
         this.originPrice = validate(originPrice);
         this.orderItems = validate(orderItems);
         this.version = version;
+        this.createdTime = createdTime;
     }
     private OrderBase validate(final OrderBase orderBase){
         if(orderBase==null){
@@ -76,13 +79,13 @@ public class Order {
             }
             return serverOrderItem.update(requestOrderItem);
         }).toList();
-        return new Order(this.orderEntityId,this.orderBase,this.orderDetail,this.originPrice,resultOrderItems,this.version);
+        return new Order(this.orderEntityId,this.orderBase,this.orderDetail,this.originPrice,resultOrderItems,this.version,this.createdTime);
     }
 
     public static Order createRequestOrder(final OrderBase orderBase,final OrderDetail orderDetail,final Price price,final List<OrderItem> orderItems){
-        return new Order(null,orderBase,orderDetail,price,orderItems,null);
+        return new Order(null,orderBase,orderDetail,price,orderItems,null,null);
     }
-    public static Order of(final Long orderEntityId,final OrderBase orderBase,final OrderDetail orderDetail,final Price totalPrice,final List<OrderItem> orderItems,final Long version){
-        return new Order(orderEntityId,orderBase,orderDetail,totalPrice,orderItems,version);
+    public static Order of(final Long orderEntityId,final OrderBase orderBase,final OrderDetail orderDetail,final Price totalPrice,final List<OrderItem> orderItems,final Long version,final LocalDate createdTime){
+        return new Order(orderEntityId,orderBase,orderDetail,totalPrice,orderItems,version,createdTime);
     }
 }

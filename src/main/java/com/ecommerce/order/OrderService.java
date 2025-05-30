@@ -4,18 +4,26 @@ import com.ecommerce.order.domain.Order;
 import com.ecommerce.order.domain.TmpOrder;
 import com.ecommerce.order.dto.request.CompleteOrderRequest;
 import com.ecommerce.order.dto.request.CreateOrderIdRequest;
+import com.ecommerce.order.dto.request.ReadOrderRequest;
 import com.ecommerce.order.dto.request.UpdateOrderRequest;
 import com.ecommerce.order.dto.response.CreateOrderIdResponse;
+import com.ecommerce.order.dto.response.ReadOrderResponse;
 import com.ecommerce.order.exception.application.OrderNotFoundException;
 import com.ecommerce.order.persistence.OrderRepository;
 import com.ecommerce.order.persistence.TmpOrderRepository;
+import com.ecommerce.order.domain.constraint.Constraint;
+import com.ecommerce.order.persistence.constraint.PageRequest;
+import com.ecommerce.order.persistence.constraint.Specifications;
 import com.ecommerce.order.persistence.entity.OrderEntity;
 import com.ecommerce.order.persistence.entity.TmpOrderEntity;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -61,5 +69,13 @@ public class OrderService {
         final OrderEntity resultOrderEntity = OrderEntity.from(resultOrder);
         orderRepository.save(resultOrderEntity);
         request.getClient().sendMessage(request);
+    }
+
+    @Transactional(readOnly = true)
+    public ReadOrderResponse findOrder(final ReadOrderRequest request){
+        final Constraint constraint = request.toConstraint();
+        final Slice<OrderEntity> orderEntities = orderRepository.findAll(Specifications.from(constraint), PageRequest.from(constraint));
+        final List<Order> orders = orderEntities.stream().map(orderEntity -> orderEntity.toOrder()).toList();
+        return ReadOrderResponse.from(orders);
     }
 }

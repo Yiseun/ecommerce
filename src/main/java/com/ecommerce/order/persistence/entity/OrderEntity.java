@@ -8,12 +8,16 @@ import com.ecommerce.order.domain.orderitem.*;
 import com.ecommerce.order.domain.orderitem.OrderItemState;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderEntity {
@@ -33,6 +37,8 @@ public class OrderEntity {
     private List<OrderItemEntity> orderItemEntityList;
     @Version
     private Long version;
+    @CreatedDate
+    private LocalDate createdTime;
 
     public Order toOrder(){
         final OrderBase orderBase = OrderBase.of(OrderId.from(this.orderId),this.memberId);
@@ -60,7 +66,7 @@ public class OrderEntity {
             final TrackingInfo trackingInfo = TrackingInfo.from(orderItemEntity.getTrackingInfo());
             return OrderItem.of(orderItemInfo,orderItemState,trackingInfo);
         }).toList();
-        return Order.of(this.orderEntityId,orderBase,orderDetail,originPrice,orderItems,this.version);
+        return Order.of(this.orderEntityId,orderBase,orderDetail,originPrice,orderItems,this.version,this.createdTime);
     }
     public static OrderEntity from(final Order order){
         final List<OrderItemEntity> orderItemEntities = order.getOrderItems().stream().map(orderItem ->
@@ -89,6 +95,7 @@ public class OrderEntity {
                 .buyerPostcode(order.getOrderDetail().getBuyerPostcode())
                 .orderItemEntityList(orderItemEntities)
                 .version(order.getVersion())
+                .createdTime(order.getCreatedTime())
                 .build();
     }
 }
