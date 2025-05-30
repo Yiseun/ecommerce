@@ -9,6 +9,7 @@ import com.ecommerce.order.domain.orderitem.*;
 import com.ecommerce.order.exception.application.domain.InvalidConstructionException;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class OrderTests {
@@ -35,9 +36,9 @@ public class OrderTests {
                 .buyerPostcode("00000")
                 .build();
         final Price price = Price.from("30000");
-        final Order sut = Order.of(1L,orderBase,orderDetail,price,preOrderItems,1L);
+        final Order sut = Order.of(1L,orderBase,orderDetail,price,preOrderItems,1L, LocalDate.parse("2024-10-10"));
         final Order request = Order.createRequestOrder(orderBase,orderDetail,price,requestOrderItems);
-        final Order expect = Order.of(1L,orderBase,orderDetail,price,requestOrderItems,1L);
+        final Order expect = Order.of(1L,orderBase,orderDetail,price,requestOrderItems,1L,LocalDate.parse("2024-10-10"));
 
         final Order result = sut.update(request);
 
@@ -52,7 +53,7 @@ public class OrderTests {
         final List<OrderItem> orderItems = List.of(orderItem);
         final OrderBase orderBase = OrderBase.init("fdsfd");
         final OrderDetail orderDetail = OrderDetail.createEmpty();
-        final Order sut = Order.of(1L,orderBase,orderDetail,Price.createEmpty(),orderItems,1L);
+        final Order sut = Order.of(1L,orderBase,orderDetail,Price.createEmpty(),orderItems,1L,LocalDate.parse("2024-10-10"));
         final Order request = null;
 
         assertThatThrownBy(()->sut.update(request)).isInstanceOf(InvalidConstructionException.class);
