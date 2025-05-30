@@ -47,6 +47,6 @@ public class TmpOrder {
                     .build();
             return OrderItem.from(orderItemInfo);
         }).toList();
-        return Order.of(null,orderBase,orderDetail,price,orderItems,null);
+        return Order.createRequestOrder(orderBase,orderDetail,price,orderItems);
     }
 }
