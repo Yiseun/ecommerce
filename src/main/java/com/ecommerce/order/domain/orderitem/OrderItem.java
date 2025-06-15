@@ -54,4 +54,4 @@ public class OrderItem {
     public static OrderItem of(final OrderItemInfo orderItemInfo,final OrderItemState orderItemState,final TrackingInfo trackingInfo){
         return new OrderItem(orderItemInfo,orderItemState,trackingInfo);
     }
-}git
+}
