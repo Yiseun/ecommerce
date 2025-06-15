@@ -4,13 +4,13 @@ import com.ecommerce.coupon.CouponReceiver;
 import com.ecommerce.coupon.dto.CouponRequest;
 import com.ecommerce.coupon.dto.InternalCouponUseRequest;
 import com.ecommerce.order.domain.Order;
-import com.ecommerce.order.dto.OrderRequest;
 import com.ecommerce.order.dto.request.CompleteOrderRequest;
 import com.ecommerce.payment.PaymentReceiver;
 import com.ecommerce.payment.dto.PurchaseItemDto;
 import com.ecommerce.payment.dto.internal.InternalPaymentPurchaseRequest;
 import com.ecommerce.product.ProductReceiver;
-import com.ecommerce.product.dto.InternalProductPurchaseRequest;
+import com.ecommerce.product.dto.UpdateItemRequest;
+import com.ecommerce.product.dto.UpdateProductRequest;
 import com.ecommerce.product.dto.ProductDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -52,14 +52,16 @@ public class OrderCreateClient {
                 .build();
         paymentReceiver.purchase(paymentPurchaseRequest);
 
-        final List<ProductDto> productDtos = request.getBody().getOrderItemDtos().stream().map(i->
-                ProductDto.builder()
-                        .productId(i.getProductId())
-                        .productName(i.getProductName())
-                        .price(i.getPrice())
-                        .quantity(i.getQuantity())
-                        .build()).toList();
-        final InternalProductPurchaseRequest productPurchaseRequest = InternalProductPurchaseRequest.from(productDtos);
+        final List<UpdateItemRequest> updateItemRequests = order.getOrderItems().stream().map(orderItem -> {
+            final ProductDto productDto = ProductDto.builder()
+                    .productId(orderItem.getOrderItemInfo().getProductId())
+                    .productName(orderItem.getOrderItemInfo().getProductName())
+                    .quantity(orderItem.getOrderItemInfo().getQuantity().getValue().toString())
+                    .price(orderItem.getOrderItemInfo().getPrice().getValue().toString())
+                    .build();
+            return UpdateItemRequest.of(orderItem.getOrderItemInfo().getOrderItemId().getValue().toString(),productDto);
+        }).toList();
+        final UpdateProductRequest productPurchaseRequest = UpdateProductRequest.from(request.getBody().getOrderId(),request.getMemberId(),updateItemRequests);
         productReceiver.purchase(productPurchaseRequest);
 
         final List<CouponRequest> couponRequests = request.getBody().getOrderItemDtos().stream().map(i->

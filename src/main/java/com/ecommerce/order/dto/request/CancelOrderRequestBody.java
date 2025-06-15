@@ -12,4 +12,8 @@ public class CancelOrderRequestBody {
     private final List<OrderItemDto> orderItemDtos;
     private final String orderId;
     private final String totalPrice;
+
+    public static CancelOrderRequestBody of(final List<OrderItemDto> orderItemDtos,final String orderId,final String totalPrice){
+        return new CancelOrderRequestBody(orderItemDtos, orderId, totalPrice);
+    }
 }

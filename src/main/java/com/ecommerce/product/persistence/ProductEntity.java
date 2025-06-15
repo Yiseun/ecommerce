@@ -2,6 +2,7 @@ package com.ecommerce.product.persistence;
 
 import com.ecommerce.product.domain.Product;
 import com.ecommerce.product.domain.ProductInfo;
+import com.ecommerce.product.domain.Quantity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,14 +27,14 @@ public class ProductEntity {
 
     public Product toProduct(){
         final ProductInfo productInfo = ProductInfo.of(productId.toString(),productName,price.toString());
-        return Product.of(productInfo,quantity.toString());
+        return Product.of(productInfo, Quantity.from(quantity.toString()));
     }
 
     public static ProductEntity from(final Product product){
         final Long productId = product.getProductInfo().getProductId();
         final String productName = product.getProductInfo().getProductName();
         final Long price = product.getProductInfo().getPrice();
-        final Long quantity = product.getQuantity();
+        final Long quantity = product.getQuantity().getValue();
         return new ProductEntity(productId,productName,price,quantity);
     }
 }

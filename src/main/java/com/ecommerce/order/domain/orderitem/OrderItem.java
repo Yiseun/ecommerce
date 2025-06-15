@@ -11,11 +11,6 @@ public class OrderItem {
     private final OrderItemState orderItemState;
     private final TrackingInfo trackingInfo;
 
-    private OrderItem(final OrderItemInfo orderItemInfo){
-        this.orderItemInfo = validate(orderItemInfo);
-        this.orderItemState = OrderItemState.init();
-        this.trackingInfo = TrackingInfo.createEmpty();
-    }
     private OrderItem(final OrderItemInfo orderItemInfo,final OrderItemState orderItemState,final TrackingInfo trackingInfo){
         this.orderItemInfo = validate(orderItemInfo);
         this.orderItemState = validate(orderItemState);
@@ -54,9 +49,8 @@ public class OrderItem {
     }
 
     public static OrderItem from(final OrderItemInfo orderItemInfo){
-        return new OrderItem(orderItemInfo);
+        return new OrderItem(orderItemInfo,OrderItemState.init(),TrackingInfo.createEmpty());
     }
-
     public static OrderItem of(final OrderItemInfo orderItemInfo,final OrderItemState orderItemState,final TrackingInfo trackingInfo){
         return new OrderItem(orderItemInfo,orderItemState,trackingInfo);
     }

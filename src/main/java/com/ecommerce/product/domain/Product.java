@@ -1,55 +1,51 @@
 package com.ecommerce.product.domain;
 
 import com.ecommerce.payment.exception.application.domain.EqualityException;
-import com.ecommerce.payment.exception.application.domain.UnderstockedException;
-import com.ecommerce.product.exception.application.domain.BusinessLogicException;
-import com.ecommerce.product.exception.application.domain.FailedCreationException;
+import com.ecommerce.product.exception.application.domain.InvalidConstructionException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
 public class Product {
-    private static final long MINIMUM_QUANTITY = 0L;
     @EqualsAndHashCode.Include
     private final ProductInfo productInfo;
-    private final Long quantity;
+    private final Quantity quantity;
 
-    private Product(final ProductInfo productInfo,final Long quantity){
-        this.productInfo = productInfo;
-        this.quantity = quantity;
-    }
-    private Product(final ProductInfo productInfo,final String quantity){
-        this.productInfo = productInfo;
-        this.quantity = validateQuantity(quantity);
+    private Product(final ProductInfo productInfo,final Quantity quantity){
+        this.productInfo = validate(productInfo);
+        this.quantity = validate(quantity);
     }
 
-    private Long validateQuantity(final String quantity){
-        try {
-            return Long.valueOf(quantity);
-        }catch (NumberFormatException e){
-            throw new FailedCreationException("수량형식이 잘못됐습니다.");
+    private ProductInfo validate(final ProductInfo productInfo){
+        if(productInfo==null){
+            throw new InvalidConstructionException("productInfo는 null일수 없습니다.");
         }
+        return productInfo;
+    }
+    private Quantity validate(final Quantity quantity){
+        if(quantity==null){
+            throw new InvalidConstructionException("quantity는 null일수 없습니다.");
+        }
+        return quantity;
     }
 
     public void validate(final Product requestProduct){
-        if(this.quantity<requestProduct.quantity){
-            throw new BusinessLogicException("재고 수량이 부족합니다");
-        }
+        this.quantity.validate(requestProduct.quantity);
     }
 
     public Product update(final Product requestProduct){
         if(!this.equals(requestProduct)){
             throw new EqualityException("다른상품의 변경을 시도하고 있습니다.");
         }
-        final long resultQuantity = this.quantity- requestProduct.quantity;
-        if(resultQuantity<MINIMUM_QUANTITY){
-            throw new UnderstockedException("재고수량이 부족합니다.");
-        }
+        final Quantity resultQuantity = this.quantity.update(requestProduct.quantity);
         return new Product(this.productInfo,resultQuantity);
     }
+    public static Product from(final ProductInfo productInfo){
+        return new Product(productInfo,Quantity.createEmpty());
+    }
 
-    public static Product of(final ProductInfo productInfo,final String quantity){
+    public static Product of(final ProductInfo productInfo,final Quantity quantity){
         return new Product(productInfo,quantity);
     }
 }

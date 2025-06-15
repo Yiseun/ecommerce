@@ -28,7 +28,11 @@ public class ReadOrderResponse {
                         .trackingInfo(orderItem.getTrackingInfo().getValue())
                         .build()
             ).toList();
-            return new OrderDto(order.getOrderBase().getOrderId().getValue().toString(),order.getOriginPrice().getValue().toString(),orderItemDtos);
+            return OrderDto.builder()
+                    .orderId(order.getOrderBase().getOrderId().getValue().toString())
+                    .totalPrice(order.getOriginPrice().getValue().toString())
+                    .orderItemDtos(orderItemDtos)
+                    .build();
         }).toList();
         return new ReadOrderResponse(orderDtos);
     }
