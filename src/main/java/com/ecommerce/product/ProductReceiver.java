@@ -1,6 +1,6 @@
 package com.ecommerce.product;
 
-import com.ecommerce.product.dto.InternalProductPurchaseRequest;
+import com.ecommerce.product.dto.UpdateProductRequest;
 import com.ecommerce.product.dto.InternalProductValidateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ public class ProductReceiver {
         productService.validate(request);
     }
 
-    public void purchase(final InternalProductPurchaseRequest request){
+    public void purchase(final UpdateProductRequest request){
         productService.update(request);
     }
 }
