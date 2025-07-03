@@ -3,10 +3,7 @@ package com.ecommerce.product.persistence;
 import com.ecommerce.product.domain.Product;
 import com.ecommerce.product.domain.ProductInfo;
 import com.ecommerce.product.domain.Quantity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,11 +20,13 @@ public class ProductEntity {
     private String productName;
     private Long price;
     private Long quantity;
+    @Version
+    private Long version;
 
 
     public Product toProduct(){
         final ProductInfo productInfo = ProductInfo.of(productId.toString(),productName,price.toString());
-        return Product.of(productInfo, Quantity.from(quantity.toString()));
+        return Product.of(productInfo, Quantity.from(quantity.toString()),version);
     }
 
     public static ProductEntity from(final Product product){
@@ -35,6 +34,7 @@ public class ProductEntity {
         final String productName = product.getProductInfo().getProductName();
         final Long price = product.getProductInfo().getPrice();
         final Long quantity = product.getQuantity().getValue();
-        return new ProductEntity(productId,productName,price,quantity);
+        final Long version = product.getVersion();
+        return new ProductEntity(productId,productName,price,quantity,version);
     }
 }

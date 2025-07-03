@@ -10,6 +10,7 @@ import com.ecommerce.product.exception.application.ProductNotFoundException;
 import com.ecommerce.product.persistence.ProductEntity;
 import com.ecommerce.product.persistence.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
@@ -46,18 +47,15 @@ public class ProductService {
         });
     }
 
-    @Retryable(retryFor = {PessimisticLockingFailureException.class})
+    @Retryable(retryFor = {OptimisticLockingFailureException.class})
     @Transactional
     public void update(final UpdateProductRequest request){
         final NonDuplicatedList<Product> requestProducts = request.toProductList();
         final List<Product> originRequestProducts = requestProducts.getStream().toList();
         final List<Product> assumedConcurrencyProductList = concurrencyEstimator.getConcurrencyProduct(originRequestProducts);
         final Set<Product> assumedConcurrencyProductSet = Set.copyOf(assumedConcurrencyProductList);
-        final List<Product> assumedNotConcurrecncyProductList = originRequestProducts.stream()
-                .filter(product -> !assumedConcurrencyProductSet.contains(product))
-                .toList();
 
-        final List<Long> requestProductEntityIds = assumedNotConcurrecncyProductList.stream().map(product->ProductEntity.from(product).getProductId()).toList();
+        final List<Long> requestProductEntityIds = originRequestProducts.stream().map(product->ProductEntity.from(product).getProductId()).toList();
         final List<ProductEntity> serverProductEntities = productRepository.findAllById(requestProductEntityIds);
         if(serverProductEntities.isEmpty()){
             throw new ProductNotFoundException("서버에 상품이 존재하지 않습니다.");
@@ -70,7 +68,9 @@ public class ProductService {
                 throw new ProductNotFoundException("서버에 존재하지않는 상품이 있습니다.");
             }
             return serverProduct.update(requestProduct);
-        }).toList();
+        })
+                .filter(product -> !assumedConcurrencyProductSet.contains(product))
+                .toList();
         final List<ProductEntity> resultProductEntities = resultProducts.stream().map(i->ProductEntity.from(i)).toList();
         productRepository.saveAll(resultProductEntities);
         pendingTaskSender.send(request,resultProducts);
@@ -78,7 +78,7 @@ public class ProductService {
 
     @Recover
     @Transactional
-    public void onConcurrencyUpdate(final PessimisticLockingFailureException e,final UpdateProductRequest request){
+    public void onConcurrencyUpdate(final OptimisticLockingFailureException e,final UpdateProductRequest request){
         pendingTaskSender.send(request);
     }
 }

@@ -61,7 +61,7 @@ public class TaskItem {
     }
 
     public TaskItem interact(final TaskItem taskItem,final Map<Product,Product> productMap){
-        if(this.equals(taskItem)){
+        if(!this.equals(taskItem)){
             throw new InvalidConstructionException("같지않은 taskItem을 사용할수 없습니다.");
         }
         final Product originProduct = productMap.get(this.product);
