@@ -1,5 +1,6 @@
 package com.ecommerce.order;
 
+import com.ecommerce.grobal.session.MemberRequest;
 import com.ecommerce.order.dto.request.*;
 import com.ecommerce.order.dto.response.CreateOrderIdResponse;
 import com.ecommerce.order.dto.response.ReadOrderResponse;
@@ -16,37 +17,37 @@ public class OrderController {
     private final OrderClientRegistry registry;
     private final OrderService orderService;
     @PostMapping("/create")
-    public ResponseEntity<CreateOrderIdResponse> createId(final String memberId, @RequestBody final CreateOrderIdRequestBody body){
-        final CreateOrderIdResponse response = orderService.createOrderId(CreateOrderIdRequest.of(memberId,body,registry.getOrderCreateClient()));
+    public ResponseEntity<CreateOrderIdResponse> createId(final MemberRequest memberRequest, @RequestBody final CreateOrderIdRequestBody body){
+        final CreateOrderIdResponse response = orderService.createOrderId(CreateOrderIdRequest.of(memberRequest.getMemberId(),body,registry.getOrderCreateClient()));
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/complete")
-    public ResponseEntity<Void> completeOrder(final String memberId, @RequestBody final CompleteOrderRequestBody body){
-        orderService.createOrder(CompleteOrderRequest.of(memberId,body,registry.getOrderCompleteClient()));
+    public ResponseEntity<Void> completeOrder(final MemberRequest memberRequest, @RequestBody final CompleteOrderRequestBody body){
+        orderService.createOrder(CompleteOrderRequest.of(memberRequest.getMemberId(), body,registry.getOrderCompleteClient()));
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/cancel")
-    public ResponseEntity<Void> cancelOrder(final String memberId, @RequestBody final CancelOrderRequestBody body){
-        orderService.updateOrder(CancelOrderRequest.of(memberId,body,registry.getOrderCancelClient()));
+    public ResponseEntity<Void> cancelOrder(final MemberRequest memberRequest, @RequestBody final CancelOrderRequestBody body){
+        orderService.updateOrder(CancelOrderRequest.of(memberRequest.getMemberId(), body,registry.getOrderCancelClient()));
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/trackingInfo/register")
-    public ResponseEntity<Void> registerTrackingInfo(final String memberId, @RequestBody final RegisterTrackingInfoRequestBody body){
-        orderService.updateOrder(RegisterTrackingInfoRequest.of(memberId,body,registry.getNoOperationClient()));
+    public ResponseEntity<Void> registerTrackingInfo(final MemberRequest memberRequest, @RequestBody final RegisterTrackingInfoRequestBody body){
+        orderService.updateOrder(RegisterTrackingInfoRequest.of(memberRequest.getMemberId(), body,registry.getNoOperationClient()));
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<ReadOrderResponse> readOrder(final String memberId,
+    public ResponseEntity<ReadOrderResponse> readOrder(final MemberRequest memberRequest,
                                                        @RequestParam(required = false) final String orderId,
                                                        @RequestParam(required = false) final String startDate,
                                                        @RequestParam(required = false) final String endDate,
                                                        @RequestParam(required = false) final String size){
         final ReadOrderRequest request = ReadOrderRequest.builder()
-                .memberId(memberId)
+                .memberId(memberRequest.getMemberId())
                 .orderId(orderId)
                 .startDate(startDate)
                 .endDate(endDate)
