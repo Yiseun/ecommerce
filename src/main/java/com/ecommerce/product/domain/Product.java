@@ -11,10 +11,12 @@ public class Product {
     @EqualsAndHashCode.Include
     private final ProductInfo productInfo;
     private final Quantity quantity;
+    private final Long version;
 
-    private Product(final ProductInfo productInfo,final Quantity quantity){
+    private Product(final ProductInfo productInfo,final Quantity quantity,final Long version){
         this.productInfo = validate(productInfo);
         this.quantity = validate(quantity);
+        this.version = version;
     }
 
     private ProductInfo validate(final ProductInfo productInfo){
@@ -39,13 +41,17 @@ public class Product {
             throw new EqualityException("다른상품의 변경을 시도하고 있습니다.");
         }
         final Quantity resultQuantity = this.quantity.update(requestProduct.quantity);
-        return new Product(this.productInfo,resultQuantity);
+        return new Product(this.productInfo,resultQuantity,this.version);
     }
     public static Product from(final ProductInfo productInfo){
-        return new Product(productInfo,Quantity.createEmpty());
+        return new Product(productInfo,Quantity.createEmpty(),null);
     }
 
     public static Product of(final ProductInfo productInfo,final Quantity quantity){
-        return new Product(productInfo,quantity);
+        return new Product(productInfo,quantity,null);
+    }
+
+    public static Product of(final ProductInfo productInfo,final Quantity quantity,final Long version){
+        return new Product(productInfo, quantity, version);
     }
 }
