@@ -56,7 +56,7 @@ public class PendingTask {
         return pendingTaskStatus;
     }
     private List<TaskItem> validate(final List<TaskItem> taskItems){
-        if(taskItems==null||taskItems.isEmpty()){
+        if(taskItems==null){
             throw new InvalidConstructionException("taskItems는 비어있을수 없습니다.");
         }
         return taskItems;
