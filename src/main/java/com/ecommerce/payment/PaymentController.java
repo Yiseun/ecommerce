@@ -1,5 +1,6 @@
 package com.ecommerce.payment;
 
+import com.ecommerce.grobal.session.MemberRequest;
 import com.ecommerce.payment.dto.request.CreatePaymentSessionRequest;
 import com.ecommerce.payment.dto.request.CreatePaymentSessionRequestBody;
 import com.ecommerce.payment.dto.CreatePaymentSessionResponse;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
     private final PaymentService paymentService;
     @PostMapping("/create")
-    public ResponseEntity<CreatePaymentSessionResponse> createPaymentSession(final String memberId, @RequestBody final CreatePaymentSessionRequestBody body){
-        final CreatePaymentSessionResponse response = paymentService.createPaymentSession(CreatePaymentSessionRequest.of(memberId,body));
+    public ResponseEntity<CreatePaymentSessionResponse> createPaymentSession(final MemberRequest memberRequest, @RequestBody final CreatePaymentSessionRequestBody body){
+        final CreatePaymentSessionResponse response = paymentService.createPaymentSession(CreatePaymentSessionRequest.of(memberRequest.getMemberId(),body));
         return ResponseEntity.ok(response);
     }
 }

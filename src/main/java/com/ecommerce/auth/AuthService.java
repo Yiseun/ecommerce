@@ -4,11 +4,9 @@ import com.ecommerce.auth.domain.Auth;
 import com.ecommerce.auth.domain.EncryptedAuth;
 import com.ecommerce.auth.domain.sessiondata.ValidationSessionData;
 import com.ecommerce.auth.dto.*;
-import com.ecommerce.auth.dto.request.SendVerifyMailRequest;
-import com.ecommerce.auth.dto.request.SignUpRequest;
-import com.ecommerce.auth.dto.request.UpdateAuthRequest;
-import com.ecommerce.auth.dto.request.VerifyAccessCodeRequest;
+import com.ecommerce.auth.dto.request.*;
 import com.ecommerce.auth.dto.response.InternalAuthUpdateResponse;
+import com.ecommerce.auth.dto.response.LoginResponse;
 import com.ecommerce.auth.dto.response.SignUpResponse;
 import com.ecommerce.auth.encrypt.Encryptor;
 import com.ecommerce.auth.exception.application.AuthNotFoundException;
@@ -75,5 +73,16 @@ public class AuthService {
         final EncryptedAuth resultEncryptedAuth = serverEncryptedAuth.update(requestEncryptedAuth);
         final EncryptedAuthEntity resultEncryptedAuthEntity = EncryptedAuthEntity.from(resultEncryptedAuth);
         encryptedAuthEntityRepository.save(resultEncryptedAuthEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public LoginResponse findAuth(final LoginRequest request){
+        final Auth requestAuth = request.toAuth();
+        final EncryptedAuth requestEncryptedAuth = encryptor.encrypt(requestAuth);
+        final EncryptedAuthEntity requestEncryptedAuthEntity = EncryptedAuthEntity.from(requestEncryptedAuth);
+        final EncryptedAuthEntity serverEncryptedAuthEntity = encryptedAuthEntityRepository.findByMemberId(requestEncryptedAuthEntity.getMemberId()).orElseThrow(()->new AuthNotFoundException("일치하는 유저정보를 찾지못했습니다."));
+        final EncryptedAuth serverEncryptedAuth = serverEncryptedAuthEntity.toEncryptedAuth();
+        final EncryptedAuth resultEncryptedAuth = encryptor.matches(requestAuth,serverEncryptedAuth);
+        return LoginResponse.from(resultEncryptedAuth);
     }
 }
