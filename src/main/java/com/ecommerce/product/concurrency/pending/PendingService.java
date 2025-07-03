@@ -3,12 +3,12 @@ package com.ecommerce.product.concurrency.pending;
 import com.ecommerce.product.concurrency.estimate.ConcurrencyEstimator;
 import com.ecommerce.product.concurrency.pending.domain.PendingTask;
 import com.ecommerce.product.concurrency.pending.dto.PendingTaskRequest;
-import com.ecommerce.product.concurrency.pending.persistence.ConcurrencyProductRepository;
 import com.ecommerce.product.concurrency.pending.persistence.PendingTaskEntity;
 import com.ecommerce.product.concurrency.pending.persistence.PendingTaskEntityRepository;
 import com.ecommerce.product.domain.Product;
 import com.ecommerce.product.exception.application.DuplicatedCreationException;
 import com.ecommerce.product.persistence.ProductEntity;
+import com.ecommerce.product.persistence.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class PendingService {
 
     private final PendingTaskEntityRepository pendingTaskEntityRepository;
-    private final ConcurrencyProductRepository productRepository;
+    private final ProductRepository productRepository;
     private final ConcurrencyEstimator estimator;
 
 
@@ -81,6 +81,7 @@ public class PendingService {
         return resultPendingTasks;
     }
 
+    @Transactional
     public List<PendingTask> updateProductWithPendingTask(final List<PendingTask> requestPendingTasks) {
         final List<PendingTask> sortedRequestPendingTask = requestPendingTasks.stream()
                 .sorted(Comparator.comparingLong(PendingTask::getPendingTaskId).reversed())
@@ -99,7 +100,7 @@ public class PendingService {
                 .toList();
         estimator.updateConcurrencyInfo(targetProductIds,true);
         final  List<ProductEntity> serverProductEntities = targetProductIds.stream()
-                .map(id->productRepository.findByProductId(id))
+                .map(id->productRepository.findByIdWithPessimisticWriteLock(id))
                 .filter(optional->optional.isPresent())
                 .map(optional->optional.get())
                 .toList();
