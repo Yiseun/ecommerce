@@ -5,15 +5,14 @@ import com.ecommerce.auth.dto.*;
 import com.ecommerce.auth.dto.request.*;
 import com.ecommerce.auth.dto.request.body.SendVerifyMailRequestBody;
 import com.ecommerce.auth.dto.request.body.UpdateAuthRequestBody;
+import com.ecommerce.auth.dto.response.LoginResponse;
 import com.ecommerce.auth.dto.response.SignUpResponse;
 import com.ecommerce.auth.port.AuthClientRegistry;
+import com.ecommerce.auth.ui.session.MemberWriteSession;
 import com.ecommerce.auth.ui.session.ValidationSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -43,6 +42,13 @@ public class AuthController {
     @PostMapping("/reset")
     public ResponseEntity<Void> resetPassword(final ValidationSession validationSession, @RequestBody final UpdateAuthRequestBody request){
         authService.updateAuth(validationSession.getPrevalidationSessionData(), UpdateAuthRequest.of(request,authClientRegistry.getUpdateAuthClient()));
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<Void> login(final MemberWriteSession memberWriteSession, @RequestBody final LoginRequest request){
+        final LoginResponse response = authService.findAuth(request);
+        memberWriteSession.writeSession(response);
         return ResponseEntity.ok().build();
     }
 }
