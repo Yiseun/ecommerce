@@ -7,16 +7,13 @@ import com.ecommerce.auth.domain.*;
 import com.ecommerce.auth.domain.sessiondata.validation.AccessCode;
 import com.ecommerce.auth.dto.*;
 import com.ecommerce.auth.dto.request.SendVerifyMailRequest;
-import com.ecommerce.auth.dto.request.body.SendVerifyMailRequestBody;
 import com.ecommerce.auth.dto.request.SignUpRequest;
 import com.ecommerce.auth.dto.request.VerifyAccessCodeRequest;
 import com.ecommerce.auth.dto.response.SignUpResponse;
 import com.ecommerce.auth.encrypt.Encryptor;
 import com.ecommerce.auth.persistence.EncryptedAuthEntity;
 import com.ecommerce.auth.persistence.EncryptedAuthEntityRepository;
-import com.ecommerce.auth.port.CreateValidationClient;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 public class AuthServiceTests {
-    @Mock
-    private CreateValidationClient createValidationClient;
     @MockBean
     private AccessCodeCreator accessCodeCreator;
     @MockBean
@@ -46,8 +41,7 @@ public class AuthServiceTests {
         final String validateState = "FAIL";
         final String theOtherValidateState = "PREPARE";
         final ValidationSessionDto requestValidationSessionDto = new ValidationSessionDto(4,email,accessCode,tryCount,validateState);
-        final SendVerifyMailRequestBody body = new SendVerifyMailRequestBody(theOtherEmail);
-        final SendVerifyMailRequest sendVerifyMailRequest = new SendVerifyMailRequest(body, createValidationClient);
+        final SendVerifyMailRequest sendVerifyMailRequest = new SendVerifyMailRequest(theOtherEmail);
         final ValidationSessionDto expect = new ValidationSessionDto(3,theOtherEmail,theOtherAccessCode,theOtherTryCount,theOtherValidateState);
         when(accessCodeCreator.createAccessCode()).thenReturn(AccessCode.from(theOtherAccessCode));
 

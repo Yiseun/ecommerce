@@ -15,16 +15,14 @@ import com.ecommerce.order.persistence.entity.OrderEntity;
 import com.ecommerce.order.persistence.entity.OrderItemEntity;
 import com.ecommerce.order.persistence.entity.TmpOrderEntity;
 import com.ecommerce.order.persistence.entity.TmpOrderItemEntity;
-import com.ecommerce.order.port.OrderCancelClient;
-import com.ecommerce.order.port.OrderCreateClient;
-import com.ecommerce.order.port.OrderIdCreateClient;
+import com.ecommerce.order.port.OrderClientRouter;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import com.sun.jdi.request.DuplicateRequestException;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -39,6 +37,8 @@ public class OrderServiceTests {
     private TmpOrderRepository tmpOrderRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @MockBean
+    private OrderClientRouter router;
 
     @Transactional
     @Test
@@ -59,8 +59,7 @@ public class OrderServiceTests {
                 .set(javaGetter(CreateOrderIdRequestBody::getOrderItemDtos),givenItems)
                 .sample();
         final String memberId = "dfdsf";
-        final OrderIdCreateClient mockCreateClient = Mockito.mock(OrderIdCreateClient.class);
-        final CreateOrderIdRequest request = CreateOrderIdRequest.of(memberId,givenBody,mockCreateClient);
+        final CreateOrderIdRequest request = CreateOrderIdRequest.of(memberId,givenBody);
 
         final CreateOrderIdResponse result = sut.createOrderId(request);
 
@@ -150,8 +149,7 @@ public class OrderServiceTests {
                 .set(javaGetter(CompleteOrderRequestBody::getBuyerAddress),serverTmpOrderEntity.getBuyerAddress())
                 .set(javaGetter(CompleteOrderRequestBody::getBuyerPostcode),serverTmpOrderEntity.getBuyerPostcode())
                 .sample();
-        final OrderCreateClient mockCreateClient = Mockito.mock(OrderCreateClient.class);
-        final CompleteOrderRequest request = CompleteOrderRequest.of(serverTmpOrderEntity.getMemberId(),body,mockCreateClient);
+        final CompleteOrderRequest request = CompleteOrderRequest.of(serverTmpOrderEntity.getMemberId(),body);
 
         sut.createOrder(request);
 
@@ -177,8 +175,7 @@ public class OrderServiceTests {
         final OrderItemDto orderItemDto = OrderItemDto.builder().orderItemId(savedOrderItemEntity.getOrderItemId().toString()).quantity(quantity).price(price).discountPrice(discountPrice).build();
         final List<OrderItemDto> orderItemDtos = List.of(orderItemDto);
         final CancelOrderRequestBody body = new CancelOrderRequestBody(orderItemDtos,orderId,totalPrice);
-        final OrderCancelClient mockCancelClient = Mockito.mock(OrderCancelClient.class);
-        final CancelOrderRequest request = CancelOrderRequest.of(memberId,body,mockCancelClient);
+        final CancelOrderRequest request = CancelOrderRequest.of(memberId,body);
 
         sut.updateOrder(request);
 
