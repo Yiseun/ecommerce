@@ -1,6 +1,6 @@
 package com.ecommerce.auth.port;
 
-import com.ecommerce.auth.domain.sessiondata.ValidationSessionData;
+import com.ecommerce.auth.domain.sessiondata.validation.Validation;
 import com.ecommerce.auth.dto.response.InternalAuthUpdateResponse;
 import com.ecommerce.member.MemberReceiver;
 import com.ecommerce.member.dto.InternalMemberReadRequest;
@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 public class UpdateAuthClient {
     private final MemberReceiver memberReceiver;
 
-    public InternalAuthUpdateResponse sendMessage(final ValidationSessionData validationSessionData){
-        final InternalMemberReadRequest request = InternalMemberReadRequest.of(null,validationSessionData.getValidation().getEmail().getValue());
+    public InternalAuthUpdateResponse sendMessage(final Validation validation){
+        final InternalMemberReadRequest request = InternalMemberReadRequest.createEmptyMemberId(validation.getEmail().getValue());
         final InternalMemberReadResponse response = memberReceiver.findMemberByEmail(request);
         return InternalAuthUpdateResponse.from(response.getMemberId());
     }
