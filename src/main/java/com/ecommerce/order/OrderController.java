@@ -4,7 +4,6 @@ import com.ecommerce.grobal.session.MemberRequest;
 import com.ecommerce.order.dto.request.*;
 import com.ecommerce.order.dto.response.CreateOrderIdResponse;
 import com.ecommerce.order.dto.response.ReadOrderResponse;
-import com.ecommerce.order.port.OrderClientRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,29 +13,28 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderClientRegistry registry;
     private final OrderService orderService;
     @PostMapping("/create")
     public ResponseEntity<CreateOrderIdResponse> createId(final MemberRequest memberRequest, @RequestBody final CreateOrderIdRequestBody body){
-        final CreateOrderIdResponse response = orderService.createOrderId(CreateOrderIdRequest.of(memberRequest.getMemberId(),body,registry.getOrderCreateClient()));
+        final CreateOrderIdResponse response = orderService.createOrderId(CreateOrderIdRequest.of(memberRequest.getMemberId(),body));
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/complete")
     public ResponseEntity<Void> completeOrder(final MemberRequest memberRequest, @RequestBody final CompleteOrderRequestBody body){
-        orderService.createOrder(CompleteOrderRequest.of(memberRequest.getMemberId(), body,registry.getOrderCompleteClient()));
+        orderService.createOrder(CompleteOrderRequest.of(memberRequest.getMemberId(), body));
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/cancel")
     public ResponseEntity<Void> cancelOrder(final MemberRequest memberRequest, @RequestBody final CancelOrderRequestBody body){
-        orderService.updateOrder(CancelOrderRequest.of(memberRequest.getMemberId(), body,registry.getOrderCancelClient()));
+        orderService.updateOrder(CancelOrderRequest.of(memberRequest.getMemberId(), body));
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/trackingInfo/register")
-    public ResponseEntity<Void> registerTrackingInfo(final MemberRequest memberRequest, @RequestBody final RegisterTrackingInfoRequestBody body){
-        orderService.updateOrder(RegisterTrackingInfoRequest.of(memberRequest.getMemberId(), body,registry.getNoOperationClient()));
+    public ResponseEntity<Void> registerTrackingInfo(@RequestBody final RegisterTrackingInfoRequest request){
+        orderService.updateOrder(request);
         return ResponseEntity.ok().build();
     }
 

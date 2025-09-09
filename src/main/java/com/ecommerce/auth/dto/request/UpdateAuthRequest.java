@@ -1,17 +1,13 @@
 package com.ecommerce.auth.dto.request;
 
-import com.ecommerce.auth.dto.request.body.UpdateAuthRequestBody;
-import com.ecommerce.auth.port.UpdateAuthClient;
-import lombok.Getter;
+import com.ecommerce.auth.domain.RawPassword;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
 public class UpdateAuthRequest {
-    private final UpdateAuthRequestBody body;
-    private final UpdateAuthClient client;
+    private final String password;
 
-    public static UpdateAuthRequest of(final UpdateAuthRequestBody body,final UpdateAuthClient client){
-        return new UpdateAuthRequest(body,client);
+    public RawPassword toPassword(){
+        return RawPassword.from(this.password);
     }
 }

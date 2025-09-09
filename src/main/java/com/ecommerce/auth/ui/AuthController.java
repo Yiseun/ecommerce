@@ -3,11 +3,8 @@ package com.ecommerce.auth.ui;
 import com.ecommerce.auth.AuthService;
 import com.ecommerce.auth.dto.*;
 import com.ecommerce.auth.dto.request.*;
-import com.ecommerce.auth.dto.request.body.SendVerifyMailRequestBody;
-import com.ecommerce.auth.dto.request.body.UpdateAuthRequestBody;
 import com.ecommerce.auth.dto.response.LoginResponse;
 import com.ecommerce.auth.dto.response.SignUpResponse;
-import com.ecommerce.auth.port.AuthClientRegistry;
 import com.ecommerce.auth.ui.session.MemberWriteSession;
 import com.ecommerce.auth.ui.session.ValidationSession;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthClientRegistry authClientRegistry;
     private final AuthService authService;
     @PostMapping("/mail/send")
-    public ResponseEntity<Void> sendVerifyMail(final ValidationSession validationSession, @RequestBody final SendVerifyMailRequestBody body){
-        final ValidationSessionDto response = authService.createValidation(validationSession.getPrevalidationSessionData(), SendVerifyMailRequest.of(authClientRegistry.getCreatePrevalidationClient(),body));
+    public ResponseEntity<Void> sendVerifyMail(final ValidationSession validationSession, @RequestBody final SendVerifyMailRequest request){
+        final ValidationSessionDto response = authService.createValidation(validationSession.getPrevalidationSessionData(), request);
         validationSession.update(response);
         return ResponseEntity.ok().build();
     }
@@ -40,8 +36,8 @@ public class AuthController {
     }
 
     @PostMapping("/reset")
-    public ResponseEntity<Void> resetPassword(final ValidationSession validationSession, @RequestBody final UpdateAuthRequestBody request){
-        authService.updateAuth(validationSession.getPrevalidationSessionData(), UpdateAuthRequest.of(request,authClientRegistry.getUpdateAuthClient()));
+    public ResponseEntity<Void> resetPassword(final ValidationSession validationSession, @RequestBody final UpdateAuthRequest request){
+        authService.updateAuth(validationSession.getPrevalidationSessionData(), request);
         return ResponseEntity.ok().build();
     }
 

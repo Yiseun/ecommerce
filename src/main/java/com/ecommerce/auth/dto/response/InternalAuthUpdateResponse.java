@@ -13,7 +13,7 @@ public class InternalAuthUpdateResponse {
 
     public Auth toAuth(final UpdateAuthRequest request){
         final MemberId memberId = MemberId.from(this.memberId);
-        final RawPassword rawPassword = RawPassword.from(request.getBody().getPassword());
+        final RawPassword rawPassword = request.toPassword();
         return Auth.of(memberId,rawPassword);
     }
 

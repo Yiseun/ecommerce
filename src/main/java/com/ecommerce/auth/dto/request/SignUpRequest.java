@@ -1,8 +1,6 @@
 package com.ecommerce.auth.dto.request;
 
 import com.ecommerce.auth.domain.*;
-import com.ecommerce.auth.domain.sessiondata.validation.Email;
-import com.ecommerce.auth.encrypt.Encryptor;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

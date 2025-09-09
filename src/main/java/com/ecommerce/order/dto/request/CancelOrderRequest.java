@@ -6,8 +6,6 @@ import com.ecommerce.order.domain.OrderDetail;
 import com.ecommerce.order.domain.OrderId;
 import com.ecommerce.order.domain.orderitem.*;
 import com.ecommerce.order.domain.orderitem.OrderItemState;
-import com.ecommerce.order.port.OrderCancelClient;
-import com.ecommerce.order.port.OrderUpdateClient;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +15,6 @@ import java.util.List;
 public class CancelOrderRequest implements UpdateOrderRequest{
     private final String memberId;
     private final CancelOrderRequestBody body;
-    private final OrderCancelClient client;
     @Override
     public Order toOrder() {
         final OrderBase orderBase = OrderBase.of(OrderId.from(body.getOrderId()),this.memberId);
@@ -42,12 +39,7 @@ public class CancelOrderRequest implements UpdateOrderRequest{
         return Order.createRequestOrder(orderBase,orderDetail,price,orderItems);
     }
 
-    @Override
-    public OrderUpdateClient getClient() {
-        return this.client;
-    }
-
-    public static CancelOrderRequest of(final String memberId,final CancelOrderRequestBody body,final OrderCancelClient client){
-        return new CancelOrderRequest(memberId, body, client);
+    public static CancelOrderRequest of(final String memberId,final CancelOrderRequestBody body){
+        return new CancelOrderRequest(memberId, body);
     }
 }

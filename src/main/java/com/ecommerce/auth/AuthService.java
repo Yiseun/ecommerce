@@ -14,6 +14,7 @@ import com.ecommerce.auth.exception.application.DuplicatedRegistrationException;
 import com.ecommerce.auth.exception.application.ValidationNotCompleteException;
 import com.ecommerce.auth.persistence.EncryptedAuthEntity;
 import com.ecommerce.auth.persistence.EncryptedAuthEntityRepository;
+import com.ecommerce.auth.port.AuthClientRouter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -22,15 +23,16 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class AuthService {
-    private final EncryptedAuthEntityRepository encryptedAuthEntityRepository;
     private final AccessCodeCreator accessCodeCreator;
+    private final AuthClientRouter router;
+    private final EncryptedAuthEntityRepository encryptedAuthEntityRepository;
     private final Encryptor encryptor;
     @Transactional
     public ValidationSessionDto createValidation(final ValidationSessionDto serverData, final SendVerifyMailRequest request){
         final ValidationSessionData requestValidationData = request.toValidationSessionData(accessCodeCreator);
         final ValidationSessionData serverValidationData = serverData.toValidationSessionData();
         final ValidationSessionData resultValidationSessionData = serverValidationData.substitute(requestValidationData);
-        request.getClient().sendMessage(resultValidationSessionData.getValidation());
+        router.createValidation(resultValidationSessionData.getValidation());
         return ValidationSessionDto.from(resultValidationSessionData);
     }
 
@@ -64,7 +66,7 @@ public class AuthService {
         if(!serverValidationSessionData.isComplete()){
             throw new ValidationNotCompleteException("사전검증이 완료되지 않았습니다.");
         }
-        final InternalAuthUpdateResponse internalResponse = request.getClient().sendMessage(serverValidationSessionData);
+        final InternalAuthUpdateResponse internalResponse = router.updateAuth(serverValidationSessionData.getValidation());
         final Auth requestAuth = internalResponse.toAuth(request);
         final EncryptedAuth requestEncryptedAuth = encryptor.encrypt(requestAuth);
         final EncryptedAuthEntity requestEncryptedAuthEntity = EncryptedAuthEntity.from(requestEncryptedAuth);

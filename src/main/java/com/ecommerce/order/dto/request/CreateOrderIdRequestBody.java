@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 
-@Getter //패키지변경
+@Getter
 @RequiredArgsConstructor
 public class CreateOrderIdRequestBody {
     private final List<OrderItemDto> orderItemDtos;

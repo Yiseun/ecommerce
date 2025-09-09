@@ -1,8 +1,6 @@
 package com.ecommerce.order.dto.request;
 
 import com.ecommerce.order.domain.*;
-import com.ecommerce.order.dto.OrderRequest;
-import com.ecommerce.order.port.OrderIdCreateClient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +8,9 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateOrderIdRequest implements OrderRequest {
+public class CreateOrderIdRequest {
     private final String memberId;
     private final CreateOrderIdRequestBody body;
-    private final OrderIdCreateClient client;
 
     public TmpOrder toTmpOrder(){
         final List<TmpOrderItem> tmpOrderItems = body.getOrderItemDtos().stream().map(orderItemDto ->
@@ -40,7 +37,7 @@ public class CreateOrderIdRequest implements OrderRequest {
                 .tmpOrderItems(tmpOrderItems)
                 .build();
     }
-    public static CreateOrderIdRequest of(final String memberId,final CreateOrderIdRequestBody body,final OrderIdCreateClient client){
-        return new CreateOrderIdRequest(memberId, body, client);
+    public static CreateOrderIdRequest of(final String memberId,final CreateOrderIdRequestBody body){
+        return new CreateOrderIdRequest(memberId, body);
     }
 }

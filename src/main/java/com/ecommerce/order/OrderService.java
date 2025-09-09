@@ -16,6 +16,7 @@ import com.ecommerce.order.persistence.constraint.PageRequest;
 import com.ecommerce.order.persistence.constraint.Specifications;
 import com.ecommerce.order.persistence.entity.OrderEntity;
 import com.ecommerce.order.persistence.entity.TmpOrderEntity;
+import com.ecommerce.order.port.OrderClientRouter;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,13 +30,14 @@ import java.util.List;
 @Service
 public class OrderService {
 
+    private final OrderClientRouter router;
     private final TmpOrderRepository tmpOrderRepository;
     private final OrderRepository orderRepository;
 
     @Transactional
     public CreateOrderIdResponse createOrderId(final CreateOrderIdRequest request){
         final TmpOrder requestTmpOrder = request.toTmpOrder();
-        request.getClient().sendMessage(request);
+        router.createOrderId(request);
         final TmpOrderEntity reqeuestTmpOrderEntity = TmpOrderEntity.from(requestTmpOrder);
         final TmpOrderEntity savedTmpOrderEntity = tmpOrderRepository.save(reqeuestTmpOrderEntity);
         final TmpOrder savedTmpOrder = savedTmpOrderEntity.toTmpOrder();
@@ -53,7 +55,7 @@ public class OrderService {
         try {
             final OrderEntity resultOrderEntity = orderRepository.save(requestOrderEntity);
             final Order resultOrder = resultOrderEntity.toOrder();
-            request.getClient().sendMessage(request,resultOrder);
+            router.createOrder(request,resultOrder);
         }catch (DataIntegrityViolationException e){
             throw new DuplicateRequestException("이미 생성완료된 주문입니다.");
         }
@@ -68,7 +70,7 @@ public class OrderService {
         final Order resultOrder = serverOrder.update(requestOrder);
         final OrderEntity resultOrderEntity = OrderEntity.from(resultOrder);
         orderRepository.save(resultOrderEntity);
-        request.getClient().sendMessage(request);
+        router.updateOrder(request);
     }
 
     @Transactional(readOnly = true)
