@@ -10,7 +10,7 @@ public class InternalMemberReadRequest {
     private final String memberId;
     private final String email;
 
-    public static InternalMemberReadRequest of(final String memberId,final String email){
-        return new InternalMemberReadRequest(memberId, email);
+    public static InternalMemberReadRequest createEmptyMemberId(final String email){
+        return new InternalMemberReadRequest(null, email);
     }
 }
