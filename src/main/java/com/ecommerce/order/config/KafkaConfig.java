@@ -1,6 +1,6 @@
-package com.ecommerce.product.concurrency.pending.config;
+package com.ecommerce.order.config;
 
-import com.ecommerce.product.concurrency.pending.dto.PendingTaskRequest;
+import com.ecommerce.order.dto.request.CreateInitOrderRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class KafkaConfig {
     private final KafkaProperties kafkaProperties;
     @Bean
-    public ConsumerFactory<String, PendingTaskRequest> consumerFactory() {
+    public ConsumerFactory<String, CreateInitOrderRequest> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaProperties.getGroupId());
@@ -34,12 +34,12 @@ public class KafkaConfig {
 
         return new DefaultKafkaConsumerFactory<>(props,
                 new StringDeserializer(),
-                new JsonDeserializer<>(PendingTaskRequest.class));
+                new JsonDeserializer<>(CreateInitOrderRequest.class));
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, PendingTaskRequest> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, PendingTaskRequest> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, CreateInitOrderRequest> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CreateInitOrderRequest> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setBatchListener(true);

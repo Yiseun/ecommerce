@@ -2,7 +2,7 @@ package com.ecommerce.order;
 
 import com.ecommerce.order.domain.Order;
 import com.ecommerce.order.domain.TmpOrder;
-import com.ecommerce.order.dto.request.CompleteOrderRequest;
+import com.ecommerce.order.dto.request.CreateInitOrderRequest;
 import com.ecommerce.order.dto.request.CreateOrderIdRequest;
 import com.ecommerce.order.dto.request.ReadOrderRequest;
 import com.ecommerce.order.dto.request.UpdateOrderRequest;
@@ -45,7 +45,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void createOrder(final CompleteOrderRequest request){
+    public void createInitOrder(final CreateInitOrderRequest request){
         final TmpOrder requestTmpOrder = request.toTmpOrder();
         final TmpOrderEntity requestTmpOrderEntity = TmpOrderEntity.from(requestTmpOrder);
         final TmpOrderEntity serverTmpOrderEntity = tmpOrderRepository.findById(requestTmpOrderEntity.getOrderId()).orElseThrow(()-> new OrderNotFoundException("주문정보를 찾을수 없습니다."));
@@ -55,7 +55,7 @@ public class OrderService {
         try {
             final OrderEntity resultOrderEntity = orderRepository.save(requestOrderEntity);
             final Order resultOrder = resultOrderEntity.toOrder();
-            router.createOrder(request,resultOrder);
+            router.createInitOrder(request);
         }catch (DataIntegrityViolationException e){
             throw new DuplicateRequestException("이미 생성완료된 주문입니다.");
         }

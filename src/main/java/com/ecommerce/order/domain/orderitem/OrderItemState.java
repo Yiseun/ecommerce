@@ -4,6 +4,16 @@ import com.ecommerce.order.exception.application.domain.FailedCreationException;
 import com.ecommerce.order.exception.application.domain.InvalidConstructionException;
 
 public enum OrderItemState {
+
+    ORDER_STANDBY{
+        @Override
+        protected OrderItemState updateInternal(OrderItemState request) {
+            if(this.equals(request)||request.equals(ORDER_COMPLETE)||request.equals(CANCELED)){
+                return request;
+            }
+            throw new InvalidConstructionException("변경할수없는 상태로 변경을 시도하고 있습니다.");
+        }
+    },
     ORDER_COMPLETE {
         @Override
         protected OrderItemState updateInternal(OrderItemState request) {
@@ -55,7 +65,7 @@ public enum OrderItemState {
     protected abstract OrderItemState updateInternal(final OrderItemState request);
 
     public static OrderItemState init(){
-        return OrderItemState.ORDER_COMPLETE;
+        return OrderItemState.ORDER_STANDBY;
     }
     public static OrderItemState from(final String orderItemState){
         try{

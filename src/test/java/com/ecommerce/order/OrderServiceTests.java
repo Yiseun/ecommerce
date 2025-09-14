@@ -139,21 +139,21 @@ public class OrderServiceTests {
         final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
                 .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
                 .build();
-        final CompleteOrderRequestBody body = fixtureMonkey.giveMeBuilder(CompleteOrderRequestBody.class)
-                .set(javaGetter(CompleteOrderRequestBody::getOrderItemDtos),orderItemDto)
-                .set(javaGetter(CompleteOrderRequestBody::getOrderId),serverTmpOrderEntity.getOrderId().toString())
-                .set(javaGetter(CompleteOrderRequestBody::getTotalPrice),serverTmpOrderEntity.getTotalPrice())
-                .set(javaGetter(CompleteOrderRequestBody::getBuyerName),serverTmpOrderEntity.getBuyerName())
-                .set(javaGetter(CompleteOrderRequestBody::getBuyerPhoneNumber),serverTmpOrderEntity.getBuyerPhoneNumber())
-                .set(javaGetter(CompleteOrderRequestBody::getBuyerEmail),serverTmpOrderEntity.getBuyerEmail())
-                .set(javaGetter(CompleteOrderRequestBody::getBuyerAddress),serverTmpOrderEntity.getBuyerAddress())
-                .set(javaGetter(CompleteOrderRequestBody::getBuyerPostcode),serverTmpOrderEntity.getBuyerPostcode())
+        final CreateInitOrderRequestBody body = fixtureMonkey.giveMeBuilder(CreateInitOrderRequestBody.class)
+                .set(javaGetter(CreateInitOrderRequestBody::getOrderItemDtos),orderItemDto)
+                .set(javaGetter(CreateInitOrderRequestBody::getOrderId),serverTmpOrderEntity.getOrderId().toString())
+                .set(javaGetter(CreateInitOrderRequestBody::getTotalPrice),serverTmpOrderEntity.getTotalPrice())
+                .set(javaGetter(CreateInitOrderRequestBody::getBuyerName),serverTmpOrderEntity.getBuyerName())
+                .set(javaGetter(CreateInitOrderRequestBody::getBuyerPhoneNumber),serverTmpOrderEntity.getBuyerPhoneNumber())
+                .set(javaGetter(CreateInitOrderRequestBody::getBuyerEmail),serverTmpOrderEntity.getBuyerEmail())
+                .set(javaGetter(CreateInitOrderRequestBody::getBuyerAddress),serverTmpOrderEntity.getBuyerAddress())
+                .set(javaGetter(CreateInitOrderRequestBody::getBuyerPostcode),serverTmpOrderEntity.getBuyerPostcode())
                 .sample();
-        final CompleteOrderRequest request = CompleteOrderRequest.of(serverTmpOrderEntity.getMemberId(),body);
+        final CreateInitOrderRequest request = CreateInitOrderRequest.of(serverTmpOrderEntity.getMemberId(),body);
 
-        sut.createOrder(request);
+        sut.createInitOrder(request);
 
-        assertThatThrownBy(()->sut.createOrder(request)).isInstanceOf(DuplicateRequestException.class);
+        assertThatThrownBy(()->sut.createInitOrder(request)).isInstanceOf(DuplicateRequestException.class);
     }
 
     @Test

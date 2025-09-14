@@ -5,10 +5,11 @@ import com.ecommerce.auth.dto.response.InternalAuthUpdateResponse;
 import com.ecommerce.member.MemberReceiver;
 import com.ecommerce.member.dto.InternalMemberReadRequest;
 import com.ecommerce.member.dto.InternalMemberReadResponse;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@Component
+@RequiredArgsConstructor
 public class UpdateAuthClient {
     private final MemberReceiver memberReceiver;
 
@@ -18,7 +19,4 @@ public class UpdateAuthClient {
         return InternalAuthUpdateResponse.from(response.getMemberId());
     }
 
-    public static UpdateAuthClient from(final MemberReceiver memberReceiver){
-        return new UpdateAuthClient(memberReceiver);
-    }
 }

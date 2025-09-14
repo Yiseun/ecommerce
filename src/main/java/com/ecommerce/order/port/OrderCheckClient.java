@@ -7,13 +7,14 @@ import com.ecommerce.order.dto.request.CreateOrderIdRequest;
 import com.ecommerce.product.ProductReceiver;
 import com.ecommerce.product.dto.InternalProductValidateRequest;
 import com.ecommerce.product.dto.ProductDto;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrderIdCreateClient {
+@Component
+@RequiredArgsConstructor
+public class OrderCheckClient {
 
     private final CouponReceiver couponReceiver;
     private final ProductReceiver productReceiver;
@@ -41,7 +42,4 @@ public class OrderIdCreateClient {
         productReceiver.validate(InternalProductValidateRequest.from(productDtos));
     }
 
-    public static OrderIdCreateClient of(final CouponReceiver couponReceiver, final ProductReceiver productReceiver){
-        return new OrderIdCreateClient(couponReceiver,productReceiver);
-    }
 }

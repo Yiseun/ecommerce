@@ -1,4 +1,4 @@
-package com.ecommerce.product.concurrency.pending.config;
+package com.ecommerce.order.config;
 
 import lombok.AccessLevel;
 import lombok.Getter;
