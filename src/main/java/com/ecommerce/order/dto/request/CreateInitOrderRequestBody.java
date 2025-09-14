@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 @Getter
 @RequiredArgsConstructor
-public class CompleteOrderRequestBody {
+public class CreateInitOrderRequestBody {
     private final List<OrderItemDto> orderItemDtos;
     private final String orderId;
     private final String impUid;
