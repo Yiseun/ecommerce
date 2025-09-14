@@ -7,16 +7,28 @@ import com.ecommerce.order.domain.OrderId;
 import com.ecommerce.order.domain.orderitem.*;
 import com.ecommerce.order.dto.OrderItemDto;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@Getter
 public class CompleteOrderRequest implements UpdateOrderRequest{
     private final List<OrderItemDto> orderItemDtos;
     private final String orderId;
     private final String memberId;
+    private final String impUid;
+    private final String paymentKey;
+    private final String payMethod;
+    private final String pgProvider;
     private final String totalPrice;
+    private final String buyerName;
+    private final String buyerPhoneNumber;
+    private final String buyerEmail;
+    private final String buyerAddress;
+    private final String buyerPostcode;
 
     @Override
     public Order toOrder() {
@@ -42,7 +54,4 @@ public class CompleteOrderRequest implements UpdateOrderRequest{
         return Order.createRequestOrder(orderBase,orderDetail,price,orderItems);
     }
 
-    public static CompleteOrderRequest of(final List<OrderItemDto> orderItemDtos, final String orderId, final String memberId,final String totalPrice){
-        return new CompleteOrderRequest(orderItemDtos,orderId,memberId,totalPrice);
-    }
 }
