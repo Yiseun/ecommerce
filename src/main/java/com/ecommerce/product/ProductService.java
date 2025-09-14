@@ -1,8 +1,6 @@
 package com.ecommerce.product;
 
 import com.ecommerce.grobal.util.NonDuplicatedList;
-import com.ecommerce.product.concurrency.pending.PendingTaskSender;
-import com.ecommerce.product.concurrency.estimate.ConcurrencyEstimator;
 import com.ecommerce.product.domain.Product;
 import com.ecommerce.product.dto.*;
 import com.ecommerce.product.exception.application.ProductNotFoundException;
@@ -10,23 +8,16 @@ import com.ecommerce.product.persistence.*;
 import lombok.RequiredArgsConstructor;
 import org.ahocorasick.trie.Trie;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.OptimisticLockingFailureException;
-import org.springframework.dao.PessimisticLockingFailureException;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class ProductService {
-    private final ConcurrencyEstimator concurrencyEstimator;
-    private final PendingTaskSender pendingTaskSender;
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
@@ -78,18 +69,17 @@ public class ProductService {
         });
     }
 
-    @Retryable(retryFor = {OptimisticLockingFailureException.class})
     @Transactional
     public void update(final UpdateProductRequest request){
         final NonDuplicatedList<Product> requestProducts = request.toProductList();
-        final List<Product> originRequestProducts = requestProducts.getStream().toList();
-        final List<Product> assumedConcurrencyProductList = concurrencyEstimator.getConcurrencyProduct(originRequestProducts);
-        final Set<Product> assumedConcurrencyProductSet = Set.copyOf(assumedConcurrencyProductList);
-
-        final List<Long> requestProductEntityIds = originRequestProducts.stream().map(product->ProductEntity.from(product).getProductId()).toList();
-        final List<ProductEntity> serverProductEntities = productRepository.findAllById(requestProductEntityIds);
+        final List<Long> requestProductIds = requestProducts.getStream().map(i->i.getProductInfo().getProductId()).sorted().toList();
+        final List<ProductEntity> serverProductEntities =requestProductIds.stream()
+                .map(id->productRepository.findByIdWithPessimisticWriteLock(id))
+                .filter(optional->optional.isPresent())
+                .map(optional->optional.get())
+                .toList();
         if(serverProductEntities.isEmpty()){
-            throw new ProductNotFoundException("서버에 상품이 존재하지 않습니다.");
+            throw new RuntimeException("서버에 상품이 존재하지 않습니다.");
         }
         final List<Product> serverProducts = serverProductEntities.stream().map(i->i.toProduct()).toList();
         final Map<Product,Product> serverProductMap = serverProducts.stream().collect(Collectors.toMap(i->i,i->i));
@@ -99,17 +89,9 @@ public class ProductService {
                 throw new ProductNotFoundException("서버에 존재하지않는 상품이 있습니다.");
             }
             return serverProduct.update(requestProduct);
-        })
-                .filter(product -> !assumedConcurrencyProductSet.contains(product))
-                .toList();
+        }).toList();
         final List<ProductEntity> resultProductEntities = resultProducts.stream().map(i->ProductEntity.from(i)).toList();
         productRepository.saveAll(resultProductEntities);
-        pendingTaskSender.send(request,resultProducts);
     }
 
-    @Recover
-    @Transactional
-    public void onConcurrencyUpdate(final OptimisticLockingFailureException e,final UpdateProductRequest request){
-        pendingTaskSender.send(request);
-    }
 }
