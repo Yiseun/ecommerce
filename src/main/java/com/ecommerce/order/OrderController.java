@@ -20,9 +20,9 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/complete")
-    public ResponseEntity<Void> completeOrder(final MemberRequest memberRequest, @RequestBody final CompleteOrderRequestBody body){
-        orderService.createOrder(CompleteOrderRequest.of(memberRequest.getMemberId(), body));
+    @PostMapping("/init")
+    public ResponseEntity<Void> createInitOrder(final MemberRequest memberRequest, @RequestBody final CreateInitOrderRequestBody body){
+        orderService.createInitOrder(CreateInitOrderRequest.of(memberRequest.getMemberId(), body));
         return ResponseEntity.ok().build();
     }
 
