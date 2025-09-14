@@ -5,6 +5,7 @@ import com.ecommerce.coupon.dto.CouponRequest;
 import com.ecommerce.coupon.dto.InternalCouponUseRequest;
 import com.ecommerce.order.domain.Order;
 import com.ecommerce.order.dto.request.CompleteOrderRequest;
+import com.ecommerce.order.dto.request.CreateInitOrderRequest;
 import com.ecommerce.payment.PaymentReceiver;
 import com.ecommerce.payment.dto.PurchaseItemDto;
 import com.ecommerce.payment.dto.internal.InternalPaymentPurchaseRequest;
@@ -12,19 +13,20 @@ import com.ecommerce.product.ProductReceiver;
 import com.ecommerce.product.dto.UpdateItemRequest;
 import com.ecommerce.product.dto.UpdateProductRequest;
 import com.ecommerce.product.dto.ProductDto;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrderCreateClient {
+@Component
+@RequiredArgsConstructor
+public class OrderCompleteClient {
     private final PaymentReceiver paymentReceiver;
     private final ProductReceiver productReceiver;
     private final CouponReceiver couponReceiver;
 
-    public void sendMessage(final CompleteOrderRequest request, final Order order){
-        final List<PurchaseItemDto> purchaseItemDtos = request.getBody().getOrderItemDtos().stream().map(orderItemDto ->
+    public void sendMessage(final CompleteOrderRequest request){
+        final List<PurchaseItemDto> purchaseItemDtos = request.getOrderItemDtos().stream().map(orderItemDto ->
                 PurchaseItemDto.builder()
                         .productId(orderItemDto.getProductId())
                         .productName(orderItemDto.getProductName())
@@ -36,35 +38,35 @@ public class OrderCreateClient {
                         .userCouponId(orderItemDto.getUserCouponId())
                         .build()).toList();
         final InternalPaymentPurchaseRequest paymentPurchaseRequest = InternalPaymentPurchaseRequest.builder()
-                .orderId(request.getBody().getOrderId())
-                .impUid(request.getBody().getImpUid())
-                .paymentKey(request.getBody().getPaymentKey())
+                .orderId(request.getOrderId())
+                .impUid(request.getImpUid())
+                .paymentKey(request.getPaymentKey())
                 .memberId(request.getMemberId())
-                .buyerName(request.getBody().getBuyerName())
-                .buyerPhoneNumber(request.getBody().getBuyerPhoneNumber())
-                .buyerEmail(request.getBody().getBuyerEmail())
-                .buyerAddress(request.getBody().getBuyerAddress())
-                .buyerPostcode(request.getBody().getBuyerPostcode())
-                .payMethod(request.getBody().getPayMethod())
-                .pgProvider(request.getBody().getPgProvider())
-                .totalPrice(request.getBody().getTotalPrice())
+                .buyerName(request.getBuyerName())
+                .buyerPhoneNumber(request.getBuyerPhoneNumber())
+                .buyerEmail(request.getBuyerEmail())
+                .buyerAddress(request.getBuyerAddress())
+                .buyerPostcode(request.getBuyerPostcode())
+                .payMethod(request.getPayMethod())
+                .pgProvider(request.getPgProvider())
+                .totalPrice(request.getTotalPrice())
                 .purchaseItemDtos(purchaseItemDtos)
                 .build();
         paymentReceiver.purchase(paymentPurchaseRequest);
 
-        final List<UpdateItemRequest> updateItemRequests = order.getOrderItems().stream().map(orderItem -> {
+        final List<UpdateItemRequest> updateItemRequests = request.getOrderItemDtos().stream().map(orderItem -> {
             final ProductDto productDto = ProductDto.builder()
-                    .productId(orderItem.getOrderItemInfo().getProductId())
-                    .productName(orderItem.getOrderItemInfo().getProductName())
-                    .quantity(orderItem.getOrderItemInfo().getQuantity().getValue().toString())
-                    .price(orderItem.getOrderItemInfo().getPrice().getValue().toString())
+                    .productId(orderItem.getProductId())
+                    .productName(orderItem.getProductName())
+                    .quantity(orderItem.getQuantity())
+                    .price(orderItem.getPrice())
                     .build();
-            return UpdateItemRequest.of(orderItem.getOrderItemInfo().getOrderItemId().getValue().toString(),productDto);
+            return UpdateItemRequest.of(orderItem.getOrderItemId(),productDto);
         }).toList();
-        final UpdateProductRequest productPurchaseRequest = UpdateProductRequest.from(request.getBody().getOrderId(),request.getMemberId(),updateItemRequests);
+        final UpdateProductRequest productPurchaseRequest = UpdateProductRequest.from(request.getOrderId(),request.getMemberId(),updateItemRequests);
         productReceiver.purchase(productPurchaseRequest);
 
-        final List<CouponRequest> couponRequests = request.getBody().getOrderItemDtos().stream().map(i->
+        final List<CouponRequest> couponRequests = request.getOrderItemDtos().stream().map(i->
                 CouponRequest.builder()
                         .userCouponId(i.getUserCouponId())
                         .couponId(i.getCouponId())
@@ -76,7 +78,7 @@ public class OrderCreateClient {
         couponReceiver.use(InternalCouponUseRequest.of(request.getMemberId(),couponRequests));
     }
 
-    public static OrderCreateClient of(final PaymentReceiver paymentReceiver, final ProductReceiver productReceiver, final CouponReceiver couponReceiver){
-        return new OrderCreateClient(paymentReceiver, productReceiver, couponReceiver);
+    public static OrderCompleteClient of(final PaymentReceiver paymentReceiver, final ProductReceiver productReceiver, final CouponReceiver couponReceiver){
+        return new OrderCompleteClient(paymentReceiver, productReceiver, couponReceiver);
     }
 }
